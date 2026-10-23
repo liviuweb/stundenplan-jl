@@ -1,6 +1,6 @@
 // Offline-Speicher. Die Version ändert sich bei jedem Build automatisch.
-const CACHE='semester-072bd4e665';
-const FILES=["./","index.html","manifest.webmanifest","fonts/fonts.css","fonts/figtree-latin-400-normal.woff2","fonts/figtree-latin-500-normal.woff2","fonts/figtree-latin-600-normal.woff2","fonts/figtree-latin-700-normal.woff2","fonts/nunito-latin-700-normal.woff2","fonts/nunito-latin-800-normal.woff2","fonts/nunito-latin-900-normal.woff2","icons/apple-touch-icon.png","icons/favicon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png"];
+const CACHE='semester-c995d12e25';
+const FILES=["./","index.html","manifest.webmanifest","fonts.css","apple-touch-icon.png","favicon.png","figtree-latin-400-normal.woff2","figtree-latin-500-normal.woff2","figtree-latin-600-normal.woff2","figtree-latin-700-normal.woff2","icon-192.png","icon-512.png","icon-maskable-512.png","nunito-latin-700-normal.woff2","nunito-latin-800-normal.woff2","nunito-latin-900-normal.woff2"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
@@ -12,7 +12,7 @@ self.addEventListener('fetch',e=>{
 // Benachrichtigungen
 self.addEventListener('push',e=>{
   let d={};try{d=e.data?e.data.json():{};}catch(_){d={body:e.data?e.data.text():''};}
-  e.waitUntil(self.registration.showNotification(d.title||'Mein Semester',{body:d.body||'',tag:d.tag||undefined,icon:'icons/icon-192.png',badge:'icons/icon-192.png',data:{url:'./'}}));
+  e.waitUntil(self.registration.showNotification(d.title||'Mein Semester',{body:d.body||'',tag:d.tag||undefined,icon:'icon-192.png',badge:'icon-192.png',data:{url:'./'}}));
 });
 self.addEventListener('notificationclick',e=>{
   e.notification.close();
