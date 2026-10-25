@@ -302,7 +302,27 @@ main.wrap{padding-block:8px 56px}
 .err{color:var(--todo);font-weight:700;font-size:.9rem;margin:0}
 .seg.xtypes{grid-template-columns:repeat(6,minmax(0,1fr))}.seg.xtypes button{grid-column:span 2}.seg.xtypes button:nth-child(n+4){grid-column:span 3}
 .xlist{display:grid;gap:8px;margin-bottom:22px}
-.xrow{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:var(--r-md);padding:10px 12px 10px 10px;box-shadow:0 1px 0 var(--line)}
+.xcard{background:var(--surface);border-radius:var(--r-md);box-shadow:0 1px 0 var(--line);overflow:hidden}
+.xrow{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 10px}
+.xregs{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:9px 12px 9px 14px;font-size:.86rem;font-weight:700;border-top:1px solid var(--line)}
+.xregs span{min-width:0}
+.xregs.open{background:color-mix(in srgb,var(--todo) 11%,var(--surface));color:var(--todo)}
+.xregs.soon{background:color-mix(in srgb,var(--wait) 10%,var(--surface));color:var(--wait)}
+.xregs.missed{background:color-mix(in srgb,var(--todo) 16%,var(--surface));color:var(--todo)}
+.xregs .btn{flex:none}
+.xok{color:var(--ok)}
+.regalert{border-radius:var(--r-lg);padding:16px 18px;background:color-mix(in srgb,var(--todo) 10%,var(--surface));box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--todo) 45%,transparent)}
+.regalert h2{font-weight:900;font-size:1.08rem;color:var(--todo);margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.regalert h2 svg{width:22px;height:22px;flex:none}
+.regalert .ri{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid color-mix(in srgb,var(--todo) 20%,transparent)}
+.regalert .ri:first-of-type{border-top:0}
+.regalert .ri b{display:block;line-height:1.3}
+.regalert .ri small{color:var(--muted);font-weight:600;font-size:.84rem}
+.regalert .ri .btn{flex:none}
+.regalert p{margin:0 0 6px;color:var(--ink);font-size:.92rem}
+.xreg{display:grid;gap:10px;background:var(--bg);border-radius:var(--r-md);padding:12px 14px}
+.xreg .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xreg input[type=date]{background:var(--surface)}
 .xrow .xmain{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;text-align:left;color:inherit}
 .xd{flex:none;width:52px;border-radius:12px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;background:color-mix(in srgb,var(--s) 13%,var(--surface));color:var(--s);font-size:.72rem;font-weight:700;line-height:1.1}
 .xd b{font-family:var(--f-display);font-weight:900;font-size:1.35rem;line-height:1.05}
@@ -313,8 +333,10 @@ main.wrap{padding-block:8px 56px}
 .xc{flex:none;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--bg);color:var(--muted);white-space:nowrap}
 .xc.soon{background:color-mix(in srgb,var(--wait) 16%,transparent);color:var(--wait)}
 .xc.urgent{background:color-mix(in srgb,var(--todo) 14%,transparent);color:var(--todo)}
-.xrow.done{opacity:.6}
-.xrow.done .xt b{text-decoration:line-through;text-decoration-thickness:1.5px}
+.xcard.done .xrow{opacity:.6}
+.xwarn{color:var(--todo);font-weight:700}
+.xchecks{display:grid;gap:10px;background:var(--bg);border-radius:var(--r-md);padding:12px 14px}
+.xcard.done .xt b{text-decoration:line-through;text-decoration-thickness:1.5px}
 .xrow .cb{flex:none}
 .xgrade{font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
 .xempty{background:var(--surface);border-radius:var(--r-lg);padding:26px 20px;text-align:center;box-shadow:0 1px 0 var(--line)}
@@ -325,10 +347,12 @@ details.xold>summary::-webkit-details-marker{display:none}
 details.xold>summary::before{content:"›";display:inline-block;margin-right:8px;transition:transform .15s}
 details.xold[open]>summary::before{transform:rotate(90deg)}
 .xsoon{display:grid;gap:8px}
-.xsoon .xrow{box-shadow:none;background:var(--bg);padding:8px 10px 8px 8px}
+.xsoon .xcard{box-shadow:none;background:var(--bg)}
+.xsoon .xrow{padding:8px 10px 8px 8px}
 .xsoon .xd{width:44px}
 .xsoon .xd b{font-size:1.1rem}
 .adchip{background:color-mix(in srgb,var(--s) 15%,var(--surface))!important;color:var(--s)!important}
+[data-s="reg"]{--s:var(--todo)}
 .dayswk{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
 .dayswk span{font-size:.85rem;font-weight:700;color:var(--muted)}
 .dayswk div{display:flex;gap:6px}
@@ -480,7 +504,7 @@ details.xold[open]>summary::before{transform:rotate(90deg)}
 
 <script>
 const KEY='semester-v3';
-const SEED_PLAIN=null;const SEED_ENC={"iter":310000,"salt":"WUC1/V+Fd0VkLsTMYpc15A==","data":"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"};
+const SEED_PLAIN=null;const SEED_ENC={"iter":310000,"salt":"WUC1/V+Fd0VkLsTMYpc15A==","data":"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"};
 const STANDALONE=!!window.STANDALONE;
 const SYNC=window.SYNC_CONFIG&&window.SYNC_CONFIG.url&&window.SYNC_CONFIG.key?window.SYNC_CONFIG:null;
 let SEED=SEED_PLAIN;
@@ -944,6 +968,7 @@ function autoTodos(){
   cs.filter(c=>!c.hidden&&c.status==='vorgemerkt').forEach(c=>{const k=c.code||c.title;if(seenB.has(k))return;seenB.add(k);t.push({key:'beleg:'+k,title:`Im Portal belegen: ${c.title}`,txt:'Bisher nur vorgemerkt.'});});
   cs.filter(c=>!c.hidden&&c.timeUnsure).forEach(c=>t.push({key:'time:'+c.id,title:`Uhrzeit prüfen: ${c.title}`,txt:'Die eingetragene Zeit ist nur ein Platzhalter.'}));
   cs.filter(c=>!c.hidden&&!c.pick&&!c.room&&needsRoom(c)).forEach(c=>t.push({key:'room:'+c.id,title:`Raum nachtragen: ${c.title}`,txt:c.source==='portal'?'Steht im Portal noch nicht fest.':'Steht noch nicht fest.'}));
+  t.push(...examTodos());
   return t;
 }
 
@@ -1060,8 +1085,19 @@ async function pushTest(btn){
   if(btn)setTimeout(()=>{btn.disabled=false;btn.textContent='Test senden';},3000);
 }
 function reminderItems(){
-  const n=nprefs();if(!n.on||n.termine==='keine'||!book)return [];
-  const lead=Math.max(5,+n.lead||60);const out=[];const nowMs=Date.now();const me=ME();const plan=book.plans[me];
+  const n=nprefs();if(!n.on||!book)return [];
+  const lead=Math.max(5,+n.lead||60);const out=[];const nowMs=Date.now();const me=ME();const plan=book.plans[me];const skipT=n.termine==='keine';
+  // Prüfungsanmeldung: kommt immer, auch wenn Termine ausgeschaltet sind
+  for(const x of (plan.exams||[])){
+    if(!x.regUntil||x.regDone)continue;const t=xt(x);const end=fromIso(x.regUntil);const pts=[];
+    if(x.regFrom)pts.push([x.regFrom,9,'Anmeldung offen',`Ab heute kannst du dich für ${t.akk} anmelden. Frist bis ${shortDate(x.regUntil)}.`,'f']);
+    [[7,'Anmeldung: noch 7 Tage'],[3,'Anmeldung: noch 3 Tage'],[1,'Morgen endet die Anmeldung']].forEach(([k,ti])=>pts.push([iso(addDays(end,-k)),9,ti,`Hast du dich schon für ${t.akk} angemeldet? Die Frist endet am ${shortDate(x.regUntil)}.`,'d'+k]));
+    pts.push([x.regUntil,9,'Letzter Tag der Anmeldung',`Heute endet die Anmeldung für ${t.akk}. Schon angemeldet? Dann in der App bestätigen.`,'l9']);
+    pts.push([x.regUntil,17,'Anmeldung endet heute!',`Bist du für ${t.akk} angemeldet? Sonst jetzt im Portal anmelden.`,'l17']);
+    for(const [ds,h,ti,bo,k] of pts){if(k!=='f'&&x.regFrom&&(ds<x.regFrom||(ds===x.regFrom&&h===9&&k[0]==='d')))continue;const at=fromIso(ds);at.setHours(h,0,0,0);
+      if(at.getTime()<=nowMs+30000||at.getTime()>nowMs+15*864e5)continue;out.push({at:at.toISOString(),title:ti,body:bo,tag:'g-'+x.id+'-'+k});}
+  }
+  if(skipT)return fixDots(out);
   for(let i=0;i<14&&out.length<150;i++){
     const d=addDays(new Date(),i);
     for(const o of occFor(me,d)){
@@ -1071,22 +1107,23 @@ function reminderItems(){
       const at=new Date(st.getTime()-lead*60000);
       if(at.getTime()<=nowMs+30000)continue;
       const hr=at.getHours();if(n.quiet&&(hr>=22||hr<7))continue;
-      const X=o.c.source==='exam'?EXAM_T[o.c.exam.type]:null;
+      const X=o.c.source==='exam'?xt(o.c.exam):null;
       out.push({at:at.toISOString(),title:isDate?'Gleich ist Date':X?`Gleich: ${X.word}`:'Gleich geht’s los',body:isDate?`Euer Date beginnt um ${hm(o.s)} Uhr.`:X?`${X.dein} beginnt um ${hm(o.s)} Uhr. Viel Erfolg!`:`Dein nächster Termin beginnt um ${hm(o.s)} Uhr.`,tag:'r-'+iso(d)+'-'+o.s});
     }
   }
-  // Klausuren und Abgaben: am Vorabend, Abgaben zusätzlich 3 Tage vorher
+  // Klausuren, Abgaben, Studien: am Vorabend um 18 Uhr, Abgaben zusätzlich 3 Tage vorher
   for(const x of (plan.exams||[])){
-    if(x.done||!x.date)continue;const X=EXAM_T[x.type]||EXAM_T.klausur;const d=fromIso(x.date);
-    const ab=x.type==='abgabe';const when=ab?(x.due?` bis ${x.due} Uhr`:''):(x.start?` um ${x.start} Uhr`:'');
-    const plan2=[[1,`Morgen: ${X.word}`,ab?`Morgen ist Abgabe${when}.`:`${X.dein} ist morgen${when}. Viel Erfolg!`]];
-    if(ab)plan2.push([3,'Abgabe in 3 Tagen',`Deine Abgabe ist am ${shortDate(x.date)}${when}.`]);
-    for(const [k,t,b] of plan2){const at=addDays(d,-k);at.setHours(18,0,0,0);
+    if(x.done||!x.date)continue;const t=xt(x);const items=[];
+    if(t.range){items.push([x.date,`Morgen beginnt: ${t.word}`,`${t.dein} beginnt morgen.`,'s']);if(x.until&&x.until!==x.date)items.push([x.until,`Morgen endet: ${t.word}`,`${t.dein} endet morgen.`,'e']);}
+    else if(x.type==='abgabe'){const w=x.due?` bis ${x.due} Uhr`:'';items.push([x.date,'Morgen: Abgabe',`Morgen ist Abgabe${w}.`,'1']);items.push([iso(addDays(fromIso(x.date),-2)),'Abgabe in 3 Tagen',`Deine Abgabe ist am ${shortDate(x.date)}${w}.`,'3']);}
+    else items.push([x.date,`Morgen: ${t.word}`,x.start?`${t.dein} ist morgen um ${x.start} Uhr. Viel Erfolg!`:`${t.dein} ist morgen. Die Uhrzeit ist noch offen.`,'1']);
+    for(const [ds,ti,bo,k] of items){const at=addDays(fromIso(ds),-1);at.setHours(18,0,0,0);
       if(at.getTime()<=nowMs+30000||at.getTime()>nowMs+15*864e5)continue;
-      out.push({at:at.toISOString(),title:t,body:b,tag:'x-'+x.id+'-'+k});}
+      out.push({at:at.toISOString(),title:ti,body:bo,tag:'x-'+x.id+'-'+k});}
   }
-  return out;
+  return fixDots(out);
 }
+const fixDots=l=>l.map(o=>({...o,body:o.body.replace(/\.\./g,'.')}));
 let remTimer;
 function scheduleReminders(force){clearTimeout(remTimer);remTimer=setTimeout(()=>uploadReminders(force),force?150:2500);}
 async function uploadReminders(force){
@@ -1326,6 +1363,7 @@ function viewDay(){
   return `<div class="hello"><h1>${specialDay(N.d)?`${esc(specialDay(N.d))} ${pixHeart().replace('class="pixh"','class="pixh" style="display:inline-block;width:.75em;color:var(--accent);vertical-align:.05em"')}`:mine?`${greet(N)}, ${esc(name)}`:`${esc(gen(name))} Tag`}</h1><p>${DAYS_LONG[N.d.getDay()]}, ${dLong(N.d)} · Woche ${isoWeek(N.d)}</p></div>
   <div class="cols">
     <div class="stack">
+      ${regAlertHTML()}
       ${inboxHTML()}
       <div><div class="dayswk"><span>Woche ${isoWeek(wkMon)} · ${wkMon.getDate()}.${wkMon.getMonth()+1}. – ${week[6].getDate()}.${week[6].getMonth()+1}.</span><div><button class="iconbtn" data-action="dayweek" data-d="-1" aria-label="Vorige Woche">‹</button><button class="iconbtn" data-action="dayweek" data-d="1" aria-label="Nächste Woche">›</button></div></div>
       <div class="days" role="group" aria-label="Tag wählen">${strip}</div></div>
@@ -1528,82 +1566,153 @@ function catPickSheet(id,date){
     <div class="actions"><button class="btn" data-action="catedit" data-id="" data-course="${esc(id)}" data-date="${esc(date||'')}">+ Neue Kategorie</button><button class="btn" data-action="detail" data-id="${esc(id)}" data-date="${esc(date||'')}">Zurück</button></div>`);
 }
 /* ---------- Klausuren & Abgaben ---------- */
-const EXAM_T={klausur:{n:'Klausur',word:'Klausur',dein:'Deine Klausur'},test:{n:'Test',word:'Test',dein:'Dein Test'},abgabe:{n:'Abgabe',word:'Abgabe',dein:'Deine Abgabe'},referat:{n:'Referat',word:'Referat',dein:'Dein Referat'},pruefung:{n:'Mündl. Prüfung',word:'Mündliche Prüfung',dein:'Deine mündliche Prüfung'}};
-function untilTxt(ds){const dd=Math.round((fromIso(ds)-fromIso(iso(new Date())))/864e5);
+const EXAM_T={klausur:{n:'Klausur',poss:'Deine',a:'deine',on:true,timed:true},test:{n:'Test',poss:'Dein',a:'deinen',on:true,timed:true},abgabe:{n:'Abgabe',poss:'Deine',a:'deine'},
+  studie:{n:'Studie',poss:'Deine',a:'deine',range:true},pruefung:{n:'Mündl. Prüfung',en:'Mündl. E-Prüfung',w:'mündliche Prüfung',ew:'mündliche E-Prüfung',poss:'Deine',a:'deine',on:true,timed:true},
+  referat:{n:'Referat',poss:'Dein',a:'dein',timed:true,hide:true}};
+function xt(x){const T=EXAM_T[x.type]||EXAM_T.klausur;const on=!!(x.online&&T.on);
+  const n=on?(T.en||'E-'+T.n):T.n;const w=on?(T.ew||'E-'+T.n):(T.w||T.n);
+  return{T,n,word:w.charAt(0).toUpperCase()+w.slice(1),dein:T.poss+' '+w,akk:(T.a||'deine')+' '+w,timed:!!T.timed,range:!!T.range};}
+function untilTxt(ds){const dd=daysTo(ds);
   if(dd<0)return dd===-1?'gestern':`vor ${-dd} Tagen`;if(dd===0)return 'heute';if(dd===1)return 'morgen';if(dd<14)return `in ${dd} Tagen`;return `in ${Math.round(dd/7)} Wochen`;}
 function daysTo(ds){return Math.round((fromIso(ds)-fromIso(iso(new Date())))/864e5);}
-function examItem(x){const X=EXAM_T[x.type]||EXAM_T.klausur;return{id:'x:'+x.id,source:'exam',title:`${X.n}: ${x.title}`,subject:x.subject||'andere',kind:'E',room:x.room||'',place:x.place||'',status:'eigener',note:x.note||'',exam:x,
-  chip:x.type==='abgabe'?(x.due?'bis '+esc(x.due):'Abgabe'):'ganztägig'};}
-function examOccs(ds){return (state.exams||[]).filter(x=>x.date===ds&&x.type!=='abgabe'&&x.start).map(x=>{const s=toMin(x.start);const e=x.end&&toMin(x.end)>s?toMin(x.end):s+90;return{c:examItem(x),date:ds,s,e,room:x.room||'',off:false,opt:false};});}
-function examDay(ds){return (state.exams||[]).filter(x=>x.date===ds&&!(x.type==='abgabe'&&x.done)&&(x.type==='abgabe'||!x.start)).map(examItem);}
+const xEnd=x=>xt(x).range&&x.until?x.until:x.date;
+const xCourses=x=>x.courses||(x.course?[x.course]:[]);
+const xCats=x=>[x.subject||'andere',x.subject2].filter((v,i,a)=>v&&a.indexOf(v)===i).map(c=>catName(c)).join(' & ');
+function xFlags(x){return [x.retake&&xt(x).timed?'Nachschreibetermin':'',x.ubl?'UBL':'',x.regUntil&&x.regDone?'<span class="xok">✓ angemeldet</span>':''].filter(Boolean);}
+const dm=ds=>{const d=fromIso(ds);return `${d.getDate()}.${d.getMonth()+1}.`;};
+function xTime(x){const t=xt(x);if(t.range)return x.until&&x.until!==x.date?`${dm(x.date)}\u00a0–\u00a0${dm(x.until)}`:'';
+  if(x.type==='abgabe')return x.due?'bis '+x.due:'';return x.start?x.start+(x.end?'–'+x.end:''):'';}
+function xCount(x){const t=xt(x);
+  if(t.range){const ds=daysTo(x.date),de=daysTo(xEnd(x));if(ds>0)return{txt:'beginnt '+untilTxt(x.date),d:ds};return{txt:de===0?'endet heute':de===1?'endet morgen':'endet '+untilTxt(xEnd(x)),d:de};}
+  return{txt:untilTxt(x.date),d:daysTo(x.date)};}
+function regState(x){if(!x.regUntil)return '';if(x.regDone)return 'done';const t=iso(new Date());if(x.regFrom&&t<x.regFrom)return 'soon';if(t<=x.regUntil)return 'open';return 'missed';}
+function regLeft(x){const d=daysTo(x.regUntil);return d===0?'heute letzter Tag':d===1?'nur noch bis morgen':`noch ${d} Tage`;}
+function regStrip(x){
+  const st=regState(x);if(!st||st==='done'||xEnd(x)<iso(new Date()))return '';
+  if(st==='open')return `<div class="xregs open"><span>Anmelden bis ${shortDate(x.regUntil)} · ${regLeft(x)}</span><button class="btn sm primary" data-action="regdone" data-id="${esc(x.id)}">Angemeldet</button></div>`;
+  if(st==='soon')return `<div class="xregs soon"><span>Anmeldung ${shortDate(x.regFrom)} – ${shortDate(x.regUntil)} · ${daysTo(x.regFrom)===1?'ab morgen':'ab '+untilTxt(x.regFrom)}</span></div>`;
+  return `<div class="xregs missed"><span>Anmeldefrist ist abgelaufen. Im Portal prüfen!</span><button class="btn sm" data-action="regdone" data-id="${esc(x.id)}">Bin angemeldet</button></div>`;
+}
+function regOpen(){const t=iso(new Date());return examSorted().filter(x=>xEnd(x)>=t&&(regState(x)==='open'||regState(x)==='missed')).sort((a,b)=>a.regUntil.localeCompare(b.regUntil));}
+function regAlertHTML(){
+  const l=regOpen();if(!l.length)return '';const mine=isMine();
+  return `<section class="regalert" role="alert"><h2>${IC.info} ${mine?'Prüfungsanmeldung':esc(gen(state.name))+' Prüfungsanmeldung'}</h2>
+    <p>${mine?(l.length===1?'Bist du schon angemeldet?':'Bist du für diese schon angemeldet?'):`${esc(state.name)} hat ${l.length===1?'diese Anmeldung':'diese Anmeldungen'} noch nicht bestätigt.`}</p>
+    ${l.map(x=>`<div class="ri"><div><b>${esc(xt(x).n)}: ${esc(x.title)}</b><small>${regState(x)==='missed'?'Frist abgelaufen. Bitte im Portal prüfen.':`Bis ${shortDate(x.regUntil)} · ${regLeft(x)}`}</small></div><button class="btn sm primary" data-action="regdone" data-id="${esc(x.id)}">${mine?'Ja, angemeldet':'Angemeldet'}</button></div>`).join('')}
+  </section>`;
+}
+function examItem(x,chip){const t=xt(x);return{id:'x:'+x.id,source:'exam',title:`${t.n}: ${x.title}`,subject:x.subject||'andere',kind:'E',room:x.room||'',place:x.place||'',status:'eigener',note:x.note||'',exam:x,chip:chip||'ganztägig'};}
+function examOccs(ds){return (state.exams||[]).filter(x=>x.date===ds&&xt(x).timed&&x.start).map(x=>{const s=toMin(x.start);const e=x.end&&toMin(x.end)>s?toMin(x.end):s+90;return{c:examItem(x),date:ds,s,e,room:x.room||'',off:false,opt:false};});}
+function examDay(ds){const out=[];
+  (state.exams||[]).forEach(x=>{const t=xt(x);
+    if(t.range){const u=xEnd(x);if(x.date===ds&&u===ds)out.push(examItem(x));else if(x.date===ds)out.push(examItem(x,'Beginn'));else if(u===ds)out.push(examItem(x,'Ende'));return;}
+    if(x.regUntil&&!x.regDone){const t2=xt(x);
+      if(x.regUntil===ds)out.push({...examItem(x,'Anmeldeschluss'),title:`Anmelden: ${t2.n} ${x.title}`,subject:'reg'});
+      else if(x.regFrom===ds)out.push({...examItem(x,'Anmeldung startet'),title:`Anmeldung: ${t2.n} ${x.title}`});}
+    if(x.date!==ds)return;
+    if(x.type==='abgabe'){if(!x.done)out.push(examItem(x,x.due?'bis '+esc(x.due):'Abgabe'));return;}
+    if(!x.start)out.push(examItem(x,'Uhrzeit klären'));});
+  return out;}
 function examSorted(){return (state.exams||[]).slice().sort((a,b)=>(a.date+(a.start||a.due||'99')).localeCompare(b.date+(b.start||b.due||'99')));}
+function examTodos(){
+  const t=iso(new Date()),lim=iso(addDays(new Date(),60));
+  return (state.exams||[]).filter(x=>!x.done&&xt(x).timed&&!x.start&&x.date>=t&&x.date<=lim).map(x=>({key:'xtime:'+x.id+':'+x.date,title:`Uhrzeit klären: ${xt(x).n} ${x.title}`,txt:`Am ${shortDate(x.date)}. Die Uhrzeit steht noch nicht fest.`}));
+}
 function examRow(x,opt){
-  opt=opt||{};const X=EXAM_T[x.type]||EXAM_T.klausur;const d=fromIso(x.date);const dd=daysTo(x.date);const past=dd<0;
-  const time=x.type==='abgabe'?(x.due?'bis '+x.due:''):(x.start?x.start+(x.end?'–'+x.end:''):'');
-  const where=x.type==='abgabe'?x.place:(x.room?roomShort(x.room):x.place);
-  const urg=x.done||past?'':dd<=2?'urgent':dd<=7?'soon':'';
-  const right=x.grade?`<span class="xgrade">Note ${esc(x.grade)}</span>`:x.done?'':`<span class="xc ${urg}">${untilTxt(x.date)}</span>`;
-  return `<div class="xrow ${x.done?'done':''}" data-s="${esc(x.subject||'andere')}">
+  opt=opt||{};const t=xt(x);const d=fromIso(x.date);const cnt=xCount(x);const past=xEnd(x)<iso(new Date());
+  const time=xTime(x);const where=x.type==='abgabe'||t.range?x.place:(x.room?roomShort(x.room):x.place);
+  const urg=x.done||past||t.range?'':cnt.d<=2?'urgent':cnt.d<=7?'soon':'';
+  const right=x.grade?`<span class="xgrade">${x.ubl?esc(x.grade):'Note '+esc(x.grade)}</span>`:x.done||past?'':`<span class="xc ${urg}">${cnt.txt}</span>`;
+  const when=DAYS[d.getDay()]+(time?' '+esc(time):'')+(t.timed&&!x.start&&!past?' · <span class="xwarn">Uhrzeit klären</span>':'');
+  return `<div class="xcard ${x.done?'done':''}" data-s="${esc(x.subject||'andere')}"><div class="xrow">
     <button class="xmain" data-action="exam" data-id="${esc(x.id)}">
       <span class="xd"><b>${d.getDate()}</b>${MONTHS[d.getMonth()].slice(0,3)}</span>
-      <span class="xt"><span class="xk">${X.n}</span><b>${esc(x.title)}</b><span class="xm">${[opt.short?'':esc(catName(x.subject)),DAYS[d.getDay()]+(time?' '+esc(time):''),opt.short?'':esc(where||'')].filter(Boolean).join(' · ')}</span></span>
+      <span class="xt"><span class="xk">${esc(t.n)}${xFlags(x).map(f=>` · ${f}`).join('')}</span><b>${esc(x.title)}</b><span class="xm">${[opt.short?'':esc(xCats(x)),when,opt.short?'':esc(where||'')].filter(Boolean).join(' · ')}</span></span>
       ${right}
     </button>
     ${x.type==='abgabe'&&!opt.short?`<button class="cb" role="checkbox" aria-checked="${!!x.done}" aria-label="Abgegeben" data-action="examdone" data-id="${esc(x.id)}">${IC.tick}</button>`:''}
-  </div>`;
+  </div>${regStrip(x)}</div>`;
 }
 function viewExams(){
   const t=iso(new Date());const all=examSorted();const mine=isMine();
-  const open=all.filter(x=>!x.done&&x.date>=t);const old=all.filter(x=>x.done||x.date<t).reverse();
+  const open=all.filter(x=>!x.done&&xEnd(x)>=t);const old=all.filter(x=>x.done||xEnd(x)<t).reverse();
   const head=`<div class="ctop"><h1>${mine?'Klausuren & Abgaben':esc(gen(state.name))+' Klausuren & Abgaben'}</h1><button class="btn primary" data-action="examnew">+ Eintragen</button></div>`;
-  if(!all.length)return head+`<div class="xempty"><b>Noch nichts eingetragen</b><p>Trag hier Klausuren, Abgaben und Referate ein. Sie stehen dann auch im Kalender, und die App erinnert ${mine?'dich':esc(state.name)} rechtzeitig.</p><button class="btn primary" data-action="examnew">Erste Klausur eintragen</button></div>`;
-  const nk=open.filter(x=>x.type!=='abgabe').length,na=open.filter(x=>x.type==='abgabe').length;
-  return head+`${open.length?`<p class="soft" style="margin:-4px 0 14px">${[nk?`${nk} ${nk===1?'Prüfung':'Prüfungen'}`:'',na?`${na} ${na===1?'Abgabe':'Abgaben'}`:''].filter(Boolean).join(' und ')} stehen an.</p>`:''}
+  if(!all.length)return head+`<div class="xempty"><b>Noch nichts eingetragen</b><p>Trag hier Klausuren, Tests, Abgaben und Studien ein. Sie stehen dann auch im Kalender, und die App erinnert ${mine?'dich':esc(state.name)} rechtzeitig.</p><button class="btn primary" data-action="examnew">Erste Klausur eintragen</button></div>`;
+  const nk=open.filter(x=>xt(x).timed).length,na=open.filter(x=>x.type==='abgabe').length,ns=open.filter(x=>xt(x).range).length;
+  const parts=[nk?`${nk} ${nk===1?'Prüfung':'Prüfungen'}`:'',na?`${na} ${na===1?'Abgabe':'Abgaben'}`:'',ns?`${ns} ${ns===1?'Studie':'Studien'}`:''].filter(Boolean);
+  const sum=parts.length>1?parts.slice(0,-1).join(', ')+' und '+parts[parts.length-1]:parts[0];
+  const ra=regOpen();
+  return head+`${ra.length?`<div style="margin-bottom:14px">${regAlertHTML()}</div>`:''}${open.length?`<p class="soft" style="margin:-4px 0 14px">${sum} ${open.length===1?'steht':'stehen'} an.</p>`:''}
     ${open.length?`<div class="xlist">${open.map(x=>examRow(x)).join('')}</div>`:'<div class="xempty" style="margin-bottom:22px"><b>Alles geschafft</b><p>Gerade steht nichts an.</p></div>'}
     ${old.length?`<details class="xold"><summary>Erledigt und vorbei (${old.length})</summary><div class="xlist">${old.map(x=>examRow(x)).join('')}</div></details>`:''}`;
 }
 function examSoonHTML(){
   const t=iso(new Date());const lim=iso(addDays(new Date(),21));
-  const l=examSorted().filter(x=>!x.done&&x.date>=t&&x.date<=lim);if(!l.length)return '';
+  const l=examSorted().filter(x=>!x.done&&xEnd(x)>=t&&x.date<=lim);if(!l.length)return '';
   return `<section class="box"><h2>Bald fällig <span class="badge">${l.length}</span></h2><div class="xsoon">${l.slice(0,3).map(x=>examRow(x,{short:true})).join('')}</div>
     <div class="actions" style="margin-top:10px"><button class="btn sm" data-tab="fristen">Alle Klausuren & Abgaben</button></div></section>`;
 }
 function examSheet(id){
-  const x=(state.exams||[]).find(e=>e.id===id);if(!x)return;const X=EXAM_T[x.type]||EXAM_T.klausur;const d=fromIso(x.date);const ab=x.type==='abgabe';
-  const time=ab?(x.due?`bis ${x.due} Uhr`:'im Laufe des Tages'):(x.start?`${x.start}${x.end?'–'+x.end:''} Uhr`:'Uhrzeit noch offen');
+  const x=(state.exams||[]).find(e=>e.id===id);if(!x)return;const t=xt(x);const d=fromIso(x.date);const ab=x.type==='abgabe';
+  let when;
+  if(t.range){const u=fromIso(xEnd(x));when=xEnd(x)===x.date?`${DAYS_LONG[d.getDay()]}, ${dLong(d)}`:`${DAYS[d.getDay()]} ${dLong(d)} bis ${DAYS[u.getDay()]} ${dLong(u)}`;}
+  else when=`${DAYS_LONG[d.getDay()]}, ${dLong(d)} · `+(ab?(x.due?`bis ${x.due} Uhr`:'im Laufe des Tages'):(x.start?`${x.start}${x.end?'–'+x.end:''} Uhr`:'ganztägig'));
   const p=roomParts(x.room);const where=p?`Gebäude ${p.b} · Ebene ${p.lvl} · Raum ${p.nr}`:(x.room?roomShort(x.room):'');
-  openSheet(esc(x.title),`<div data-s="${esc(x.subject||'andere')}"><span class="tag">${esc(catName(x.subject))} · ${X.n}${x.course&&x.course!==x.title?' · '+esc(x.course):''}</span></div>
+  const cs=xCourses(x).filter(c=>c!==x.title);
+  openSheet(esc(x.title),`<div data-s="${esc(x.subject||'andere')}"><span class="tag">${esc(xCats(x))} · ${esc(t.n)}${xFlags(x).map(f=>' · '+f).join('')}</span></div>
     <div class="facts">
-      <div class="fact"><span class="ic">${IC.clock}</span><div><b>${DAYS_LONG[d.getDay()]}, ${dLong(d)} · ${time}</b><span>${x.done?'Erledigt.':untilTxt(x.date).replace(/^./,c=>c.toUpperCase())}</span></div></div>
+      <div class="fact"><span class="ic">${IC.clock}</span><div><b>${when}</b>${t.timed&&!x.start?'<span style="color:var(--todo);font-weight:700">Uhrzeit noch klären.</span>':''}<span>${x.done?'Erledigt.':xCount(x).txt.replace(/^./,c=>c.toUpperCase())+'.'}</span></div></div>
+      ${cs.length?`<div class="fact"><span class="ic">${IC.book}</span><div><b>${cs.length>1?'Kurse':'Kurs'}</b><span>${cs.map(esc).join('<br>')}</span></div></div>`:''}
       ${where||x.place?`<div class="fact"><span class="ic">${IC.pin}</span><div><b>${esc(where||x.place)}</b>${where&&x.place?`<span>${esc(x.place)}</span>`:''}</div></div>`:''}
+      ${x.regUntil?`<div class="fact"><span class="ic">${IC.info}</span><div><b>${{done:'Angemeldet ✓',open:'Noch nicht angemeldet',soon:'Anmeldung noch nicht offen',missed:'Anmeldefrist abgelaufen'}[regState(x)]}</b><span>Anmeldung ${x.regFrom?shortDate(x.regFrom)+' – ':'bis '}${shortDate(x.regUntil)}${regState(x)==='open'?' · '+regLeft(x):''}</span></div></div>`:''}
+      ${x.ubl?`<div class="fact"><span class="ic">${IC.info}</span><div><b>Unbenotete Leistung</b><span>Zählt als bestanden oder nicht bestanden.</span></div></div>`:''}
+      ${x.retake&&t.timed?`<div class="fact"><span class="ic">${IC.repeat}</span><div><b>Nachschreibetermin</b></div></div>`:''}
       ${x.note?`<div class="fact"><span class="ic">${IC.book}</span><div><b>Notiz</b><span>${esc(x.note)}</span></div></div>`:''}
-      ${x.grade?`<div class="fact"><span class="ic">${IC.info}</span><div><b>Note ${esc(x.grade)}</b></div></div>`:''}
+      ${x.grade?`<div class="fact"><span class="ic">${IC.info}</span><div><b>${x.ubl?'Ergebnis: ':'Note '}${esc(x.grade)}</b></div></div>`:''}
     </div>
     <div class="actions">
       ${ab?`<button class="btn ${x.done?'':'primary'}" data-action="examdone" data-id="${esc(x.id)}" data-sheet="1">${x.done?'Doch nicht abgegeben':'Abgegeben'}</button>`:''}
+      ${x.regUntil?`<button class="btn ${x.regDone?'':'primary'}" data-action="regdone" data-id="${esc(x.id)}" data-sheet="1">${x.regDone?'Doch nicht angemeldet':'Ich bin angemeldet'}</button>`:''}
       <button class="btn" data-action="examedit" data-id="${esc(x.id)}">Bearbeiten</button>
     </div>`);
 }
 function examForm(id,preset){
   preset=preset||{};const x=id?(state.exams||[]).find(e=>e.id===id):null;
-  const cs=catsOf(state);const ty=x?x.type:(preset.type||'klausur');
+  const cs=catsOf(state);let ty=x?x.type:(preset.type||'klausur');if(!EXAM_T[ty]||EXAM_T[ty].hide)ty=ty==='referat'?'klausur':'klausur';
   const subj=x?x.subject:(cs.some(c=>c.id===(prefs.view==='livius'?'uni':'andere'))?(prefs.view==='livius'?'uni':'andere'):cs[0].id);
   const titles=[...new Map(courses().filter(c=>!c.hidden&&c.source!=='wir'&&c.source!=='myangel').map(c=>[c.title,c])).values()].sort((a,b)=>a.title.localeCompare(b.title,'de'));
+  const xc=x?xCourses(x):[];
+  const sel=(id,v,none)=>`<select id="${id}"><option value="">${none}</option>${titles.map(c=>`<option value="${esc(c.title)}" data-s="${esc(c.subject)}" ${v===c.title?'selected':''}>${esc(c.title)}</option>`).join('')}${v&&!titles.some(c=>c.title===v)?`<option value="${esc(v)}" selected>${esc(v)}</option>`:''}</select>`;
+  const types=Object.entries(EXAM_T).filter(([k,v])=>!v.hide);
   openSheet(x?'Eintrag bearbeiten':(isMine()?'Neu eintragen':`Neu für ${esc(state.name)}`),`<form class="form" id="examForm" novalidate>
-    <div class="full"><div class="seg xtypes" role="group" aria-label="Art">${Object.entries(EXAM_T).map(([k,v])=>`<button type="button" data-action="etype" data-t="${k}" aria-pressed="${ty===k}">${v.n}</button>`).join('')}</div></div>
-    ${titles.length?`<label class="full">Zu welchem Kurs? <select id="e-course"><option value="">Keinem Kurs</option>${titles.map(c=>`<option value="${esc(c.title)}" data-s="${esc(c.subject)}" ${x&&x.course===c.title?'selected':''}>${esc(c.title)}</option>`).join('')}</select></label>`:''}
+    <div class="full"><div class="seg xtypes" role="group" aria-label="Art">${types.map(([k,v])=>`<button type="button" data-action="etype" data-t="${k}" aria-pressed="${ty===k}">${v.n}</button>`).join('')}</div></div>
+    ${titles.length?`<label class="full">Zu welchem Kurs?${sel('e-course',xc[0]||'','Keinem Kurs')}</label>
+    <label class="full" id="w-course2"${xc[1]?'':' hidden'}>Zweiter Kurs${sel('e-course2',xc[1]||'','Keinen zweiten Kurs')}</label>
+    <div class="full" id="b-course2"${xc[1]?' hidden':''}><button type="button" class="btn sm" data-action="ecourse2">+ Zweiter Kurs (gemeinsame Klausur)</button></div>`:''}
     <label class="full">Was?<input id="e-title" value="${esc(x?x.title:'')}" placeholder="z. B. Allgemeine Chemie I"></label>
     <label class="full">Fach<select id="e-subject">${cs.map(c=>`<option value="${esc(c.id)}" ${c.id===subj?'selected':''}>${esc(c.n)}</option>`).join('')}<option value="__new">+ Neue Kategorie …</option></select></label>
     <div class="full newcat" id="w-ecat" hidden><label>Name der neuen Kategorie<input id="e-catname" maxlength="30" placeholder="z. B. Statistik"></label>${palHTML(freeColor())}</div>
-    <label class="full">Datum<input id="e-date" type="date" value="${esc(x?x.date:(preset.date||''))}"></label>
+    <label class="full" id="w-edate"><span>Datum</span><input id="e-date" type="date" value="${esc(x?x.date:(preset.date||''))}"></label>
+    <label class="full ew-r">Bis<input id="e-until" type="date" value="${esc(x?x.until||'':'')}"></label>
     <label class="ew-t">Beginn<input id="e-start" type="time" value="${esc(x?x.start||'':'')}"></label>
     <label class="ew-t">Ende<input id="e-end" type="time" value="${esc(x?x.end||'':'')}"></label>
+    <p class="soft small full ew-t" style="margin:-4px 0 0">Uhrzeit noch nicht bekannt? Einfach leer lassen. Dann steht es ganztägig im Kalender, mit dem Hinweis „Uhrzeit klären“.</p>
     <label class="ew-a full">Abgabe bis (Uhrzeit, optional)<input id="e-due" type="time" value="${esc(x?x.due||'':'')}"></label>
     <label class="ew-t">Raum<input id="e-room" value="${esc(x?x.room||'':'')}" placeholder="z. B. K.11.23"></label>
-    <label class="ew-p">Ort<input id="e-place" value="${esc(x?x.place||'':'')}" placeholder="z. B. Moodle, Sekretariat"></label>
+    <label class="ew-p">Ort<input id="e-place" value="${esc(x?x.place||'':'')}" placeholder="z. B. Moodle, Labor"></label>
+    <div class="full xchecks">
+      <label class="cbx ew-o"><input id="e-online" type="checkbox" ${x&&x.online?'checked':''}> <span id="e-online-l">Online</span></label>
+      <label class="cbx ew-t"><input id="e-retake" type="checkbox" ${x&&x.retake?'checked':''}> Nachschreibetermin</label>
+      <label class="cbx"><input id="e-ubl" type="checkbox" ${x&&x.ubl?'checked':''}> UBL (unbenotete Leistung)</label>
+    </div>
+    <div class="full xreg"><div class="lbl" style="margin:0">Anmeldung zur Prüfung</div>
+      <div class="two"><label>Anmeldung ab<input id="e-regfrom" type="date" value="${esc(x?x.regFrom||'':'')}"></label><label>Anmeldung bis<input id="e-reguntil" type="date" value="${esc(x?x.regUntil||'':'')}"></label></div>
+      <label class="cbx"><input id="e-regdone" type="checkbox" ${x&&x.regDone?'checked':''}> Ich bin schon angemeldet</label>
+      <p class="soft small" style="margin:0">Mit Frist erinnert dich die App zum Start, 7, 3 und 1 Tag vorher und am letzten Tag zweimal, bis du die Anmeldung bestätigst.</p>
+    </div>
     <label class="full">Notiz<textarea id="e-note" rows="2" placeholder="z. B. Taschenrechner erlaubt, Kapitel 1–5">${esc(x?x.note||'':'')}</textarea></label>
-    <label>Note<input id="e-grade" value="${esc(x?x.grade||'':'')}" placeholder="wenn sie da ist" inputmode="decimal" maxlength="8"></label>
-    <p class="soft small full" style="margin:0">Wird automatisch als wichtig behandelt: Erinnerung am Vorabend${ty==='abgabe'?' und 3 Tage vorher':''}.</p>
+    <label id="w-grade"><span>Note</span><input id="e-grade" value="${esc(x?x.grade||'':'')}" placeholder="wenn sie da ist" maxlength="20"></label>
+    <p class="soft small full" id="e-hint" style="margin:0"></p>
     <p class="err full" id="e-err" hidden></p>
     <div class="actions full"><button class="btn primary" type="submit">Speichern</button>${x?`<button class="btn danger" type="button" data-action="examdel" data-id="${esc(x.id)}">Löschen</button>`:''}</div>
     <input type="hidden" id="e-type" value="${ty}"><input type="hidden" id="e-id" value="${esc(x?x.id:'')}">
@@ -1611,10 +1720,20 @@ function examForm(id,preset){
   examVis();
 }
 function examVis(){
-  const t=document.getElementById('e-type');if(!t)return;const ab=t.value==='abgabe';
-  card.querySelectorAll('.ew-t').forEach(e=>e.hidden=ab);card.querySelectorAll('.ew-a').forEach(e=>e.hidden=!ab);
-  const p=card.querySelector('.ew-p');if(p)p.classList.toggle('full',ab);
-  const h=card.querySelector('#examForm .soft.small');if(h)h.textContent=`Wird automatisch als wichtig behandelt: Erinnerung am Vorabend${ab?' und 3 Tage vorher':''}.`;
+  const te=document.getElementById('e-type');if(!te)return;const ty=te.value;const T=EXAM_T[ty]||EXAM_T.klausur;
+  const show=(sel,on)=>card.querySelectorAll(sel).forEach(e=>e.hidden=!on);
+  show('.ew-t',!!T.timed);show('.ew-a',ty==='abgabe');show('.ew-r',!!T.range);show('.ew-o',!!T.on);
+  const p=card.querySelector('.ew-p');if(p)p.classList.toggle('full',!T.timed);
+  const dl=card.querySelector('#w-edate span');if(dl)dl.textContent=T.range?'Von':'Datum';
+  const ol=document.getElementById('e-online-l');if(ol)ol.textContent=`Online (wird zur ${xt({type:ty,online:true}).n})`;
+  const ubl=document.getElementById('e-ubl');const gl=card.querySelector('#w-grade span'),gi=document.getElementById('e-grade');
+  if(gl){gl.textContent=ubl.checked?'Ergebnis':'Note';gi.placeholder=ubl.checked?'z. B. bestanden':'wenn sie da ist';}
+  const h=document.getElementById('e-hint');if(h)h.textContent='Zählt automatisch als wichtig. Erinnerung '+(T.range?'am Vortag von Beginn und Ende.':ty==='abgabe'?'3 Tage vorher und am Vorabend.':'am Vorabend und vor Beginn.');
+}
+function examAutoTitle(){
+  const ti=document.getElementById('e-title');const a=document.getElementById('e-course'),b=document.getElementById('e-course2');if(!ti||!a)return;
+  const v=[a.value,b&&!document.getElementById('w-course2').hidden?b.value:''].filter(Boolean);
+  if(v.length&&(!ti.value.trim()||ti.dataset.auto)){ti.value=v.join(' & ');ti.dataset.auto='1';}
 }
 function backupMsg(t,bad){const m=document.getElementById('backupMsg');if(!m)return;m.textContent=t;m.style.color=bad?'var(--todo)':'';m.hidden=false;}
 function exportBackup(){
@@ -1802,7 +1921,9 @@ document.addEventListener('click',ev=>{
   else if(a==='newat')formSheet(null,{date:b.dataset.date});
   else if(a==='imp'){const c=byId(id);if(c){if(c.source==='portal'){state.impP=state.impP||{};if(state.impP[id])delete state.impP[id];else state.impP[id]=true;}else c.important=!c.important;save();detailSheet(id,b.dataset.date);render();}}
   else if(a==='exam')examSheet(id);
+  else if(a==='regdone'){const x=(state.exams||[]).find(e=>e.id===id);if(x){x.regDone=!x.regDone;x.regDoneAt=x.regDone?Date.now():null;if(x.regDone)flyHeart(b);save();render();if(b.dataset.sheet)examSheet(id);}}
   else if(a==='examnew')examForm(null);
+  else if(a==='ecourse2'){document.getElementById('w-course2').hidden=false;document.getElementById('b-course2').hidden=true;document.getElementById('e-course2').focus();}
   else if(a==='examedit')examForm(id);
   else if(a==='etype'){document.getElementById('e-type').value=b.dataset.t;card.querySelectorAll('[data-action="etype"]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));examVis();}
   else if(a==='examdone'){const x=(state.exams||[]).find(e=>e.id===id);if(x){x.done=!x.done;save();render();if(b.dataset.sheet)examSheet(id);}}
@@ -1910,8 +2031,11 @@ document.addEventListener('input',ev=>{
 document.addEventListener('change',ev=>{
   if(ev.target.id==='f-every'){formVis();return;}
   if(ev.target.id==='e-subject'){const w=document.getElementById('w-ecat');if(w){w.hidden=ev.target.value!=='__new';if(!w.hidden)document.getElementById('e-catname').focus();}return;}
-  if(ev.target.id==='e-course'){const o=ev.target.selectedOptions[0];const ti=document.getElementById('e-title');const su=document.getElementById('e-subject');
-    if(o&&o.value){if(!ti.value.trim()||ti.dataset.auto)ti.value=o.value,ti.dataset.auto='1';if(o.dataset.s&&[...su.options].some(x=>x.value===o.dataset.s)){su.value=o.dataset.s;document.getElementById('w-ecat').hidden=true;}}return;}
+  if(ev.target.id==='e-ubl'){examVis();return;}
+  if(ev.target.id==='e-course'||ev.target.id==='e-course2'){
+    const o=ev.target.selectedOptions[0];const su=document.getElementById('e-subject');
+    if(ev.target.id==='e-course'&&o&&o.dataset.s&&[...su.options].some(x=>x.value===o.dataset.s)){su.value=o.dataset.s;document.getElementById('w-ecat').hidden=true;}
+    examAutoTitle();return;}
   if(ev.target.id==='f-subject'){const w=document.getElementById('w-newcat');if(w){w.hidden=ev.target.value!=='__new';if(!w.hidden)document.getElementById('f-catname').focus();}return;}
   if(ev.target.id==='n-lead'){setN('lead',+ev.target.value);return;}
   if(ev.target.id==='n-req'||ev.target.id==='n-ans'||ev.target.id==='n-quiet'){setN(ev.target.id.slice(2),ev.target.checked);return;}
@@ -1932,17 +2056,28 @@ document.addEventListener('submit',ev=>{
   if(f.id==='taskForm'){const i=document.getElementById('taskInput');const v=i.value.trim();if(!v)return;state.tasks.push({id:Date.now().toString(36),text:v,done:false,by:prefs.me||undefined});save();render();const ni=document.getElementById('taskInput');if(ni)ni.focus();return;}
   if(f.id==='examForm'){
     const g=k=>document.getElementById('e-'+k);const err=g('err');const fail=m=>{err.textContent=m;err.hidden=false;};
-    const type=g('type').value;const co=g('course')?g('course').value:'';const title=g('title').value.trim()||co;const date=g('date').value;
-    const start=type==='abgabe'?'':g('start').value,end=type==='abgabe'?'':g('end').value,due=type==='abgabe'?g('due').value:'';
+    const type=g('type').value;const T=EXAM_T[type]||EXAM_T.klausur;
+    const c1=g('course')?g('course').value:'';const c2=g('course2')&&!document.getElementById('w-course2').hidden?g('course2').value:'';
+    const title=g('title').value.trim()||[c1,c2].filter(Boolean).join(' & ');const date=g('date').value;
+    let until=T.range?(g('until').value||date):'';
+    const start=T.timed?g('start').value:'',end=T.timed?g('end').value:'',due=type==='abgabe'?g('due').value:'';
     if(!title)return fail('Bitte eintragen, worum es geht.');
-    if(!date)return fail('Bitte ein Datum wählen.');
+    if(!date)return fail(T.range?'Bitte den ersten Tag wählen.':'Bitte ein Datum wählen.');
+    if(T.range&&until<date)return fail('Der letzte Tag liegt vor dem ersten.');
     if(start&&end&&toMin(end)<=toMin(start))return fail('Das Ende muss nach dem Beginn liegen.');
+    if(!start&&end)return fail('Bitte auch den Beginn eintragen, oder beides leer lassen.');
+    const regFrom=g('regfrom').value,regUntil=g('reguntil').value;
+    if(regFrom&&!regUntil)return fail('Bitte auch das Ende der Anmeldefrist eintragen.');
+    if(regFrom&&regUntil&&regUntil<regFrom)return fail('Die Anmeldefrist endet vor ihrem Beginn.');
     let subject=g('subject').value;
     if(subject==='__new'){const n=g('catname').value.trim();if(!n)return fail('Bitte der neuen Kategorie einen Namen geben.');
       subject=newCatId();catsEdit().push({id:subject,n,c:document.querySelector('#w-ecat .pcol').value||freeColor()});}
-    const data={type,title,course:co,subject,date,start,end,due,room:type==='abgabe'?'':g('room').value.trim(),place:g('place').value.trim(),note:g('note').value.trim(),grade:g('grade').value.trim()};
+    const o2=c2&&g('course2').selectedOptions[0];const s2=o2&&o2.dataset.s&&o2.dataset.s!==subject&&catsOf(state).some(c=>c.id===o2.dataset.s)?o2.dataset.s:'';
+    const data={type,title,courses:[c1,c2].filter(Boolean),subject,subject2:s2,date,until,start,end,due,
+      room:T.timed?g('room').value.trim():'',place:g('place').value.trim(),note:g('note').value.trim(),grade:g('grade').value.trim(),
+      online:!!T.on&&g('online').checked,retake:!!T.timed&&g('retake').checked,ubl:g('ubl').checked,regFrom,regUntil,regDone:!!regUntil&&g('regdone').checked};
     state.exams=state.exams||[];const id=g('id').value;
-    if(id){const x=state.exams.find(e=>e.id===id);if(x)Object.assign(x,data);}
+    if(id){const x=state.exams.find(e=>e.id===id);if(x){Object.assign(x,data);delete x.course;}}
     else state.exams.push({id:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),done:false,...data});
     save();closeSheet();if(ui.tab!=='fristen'&&!id)go('fristen');else render();return;
   }
