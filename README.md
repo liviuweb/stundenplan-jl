@@ -1,6 +1,6 @@
 # KahloGames – Punkte & Statistiken für den Spieleabend
 
-Spiele: **Floriferous**, **Skyjo**, **Flip 7**, **13 Feuilles**, **Virus!**, **Dogs** (Dog Royal, Backdog, Agent Dog), **Wizard**, **Dominion**, **Catan** (Normal, Catan Energie, Raumfahrer), **Schiffe versenken** (Flugzeugträger, Schlachtschiff, 2 Zerstörer, Patrouillenboot).
+Spiele: **Floriferous**, **Skyjo**, **Flip 7**, **13 Feuilles**, **Virus!**, **Dogs** (Dog Royal, Backdog, Agent Dog), **Wizard**, **Dominion**, **Catan** (Normal, Catan Energie, Raumfahrer), **Schiffe versenken** (Spielfeldgröße und Flotte pro Partie einstellbar).
 Die Seite ist ein reines HTML/JS-Projekt. Sie läuft auf GitHub Pages und auch direkt per Doppelklick auf `index.html`. Gespeichert wird in einem Google Sheet.
 
 ---
@@ -53,7 +53,7 @@ Solange `API_URL` leer ist, läuft alles im **Demo-Modus**: Daten werden nur im 
   - 13 Feuilles: Rundensieger wählen (0 Punkte), die anderen tragen ihre Restkarten ein. Niedrigste Summe gewinnt.
 - **Wizard:** pro Runde Ansage und Stiche je Spieler eintragen, die App rechnet die Punkte (richtig: 20 + 10 je Stich, falsch: −10 je Stich Abweichung) und prüft, ob die Stiche zur Runde passen. Das Spiel endet nach 60 ÷ Spielerzahl Runden.
 - **Dominion & Catan:** Siegpunkte am Ende je Spieler eintragen. Bei Gleichstand wählt man den Sieger oder „Geteilter Sieg“. Bei Catan „Normal“ kann man zusätzlich Längste Handelsstraße und Größte Rittermacht festhalten.
-- **Schiffe versenken:** Pro Spieler antippen, welche gegnerischen Schiffe er versenkt hat. Optional: Schüsse und wer angefangen hat – daraus entstehen Treffsicherheit, schnellster Sieg und die Frage, ob sich der erste Schuss lohnt.
+- **Schiffe versenken:** Spielfeld (z. B. 10×10) und Anzahl je Schiffstyp festlegen – die letzte Einstellung wird gemerkt. Dann pro Spieler antippen, welche gegnerischen Schiffe er versenkt hat. Optional: Schüsse und wer angefangen hat – daraus entstehen Treffsicherheit, schnellster Sieg und die Frage, ob sich der erste Schuss lohnt.
 - **Floriferous:** Solo und Multiplayer werden getrennt ausgewertet, Standard und Extended ebenfalls (Extended bringt mehr Punkte). Die Stimmung (Anxious … Nirvana) wird nach der Tabelle aus dem Regelheft berechnet.
 
 ## Ablage

@@ -1396,17 +1396,17 @@
   // js/games/wins.js
   function makeWinsGame(def) {
     const g2 = { ...def };
-    const view3 = { variant: "all" };
+    const view2 = { variant: "all" };
     const vName = (k) => (def.variants || []).find(([v]) => v === k)?.[1] || "";
-    const filterBar3 = () => def.variants ? `<div class="filters">${seg("variant", [["all", "Alle"], ...def.variants], view3.variant)}</div>` : "";
-    const bind2 = (el, redraw) => $$('[data-seg="variant"]', el).forEach((s) => s.addEventListener("click", (e) => {
+    const filterBar2 = () => def.variants ? `<div class="filters">${seg("variant", [["all", "Alle"], ...def.variants], view2.variant)}</div>` : "";
+    const bind = (el, redraw) => $$('[data-seg="variant"]', el).forEach((s) => s.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (b) {
-        view3.variant = b.dataset.v;
+        view2.variant = b.dataset.v;
         redraw();
       }
     }));
-    const list2 = () => matchesOf(def.id, (m) => view3.variant === "all" || m.variant === view3.variant);
+    const list2 = () => matchesOf(def.id, (m) => view2.variant === "all" || m.variant === view2.variant);
     function stats2(ms) {
       var _a;
       const st = perPlayer(ms);
@@ -1439,9 +1439,9 @@
         return statTile(title, r ? fmt(r.value) : "\u2013", r ? whoList(g2, r.who) : '<span class="muted">noch niemand</span>', opts.note || "");
       };
       if (!ms.length) {
-        el.innerHTML = `${filterBar3()}<div class="empty-state panel"><p>Noch keine Partie${view3.variant !== "all" ? ` in ${esc(vName(view3.variant))}` : ""}.</p><button class="btn btn-primary" type="button" data-new>Sieg eintragen</button></div>`;
+        el.innerHTML = `${filterBar2()}<div class="empty-state panel"><p>Noch keine Partie${view2.variant !== "all" ? ` in ${esc(vName(view2.variant))}` : ""}.</p><button class="btn btn-primary" type="button" data-new>Sieg eintragen</button></div>`;
         $("[data-new]", el).onclick = () => ctx.go("neu");
-        bind2(el, () => dashboard3(el, ctx));
+        bind(el, () => dashboard3(el, ctx));
         return;
       }
       const tiles = [
@@ -1452,10 +1452,10 @@
         ...def.teams ? [T("Meiste Teamsiege", "teamWins", (v) => v, { filter: (s) => s.teamWins > 0 }), T("Meiste Einzelsiege", "soloWins", (v) => v, { filter: (s) => s.soloWins > 0 })] : []
       ];
       const recent = [...ms].reverse().slice(0, 4);
-      el.innerHTML = `${filterBar3()}<div class="stats-grid">${tiles.join("")}</div>
+      el.innerHTML = `${filterBar2()}<div class="stats-grid">${tiles.join("")}</div>
       <section class="panel"><h2 class="panel-title">Zuletzt gewonnen</h2>${recent.map(line2).join("")}<button class="btn btn-ghost wide" type="button" data-all>Alle Partien</button></section>`;
       $("[data-all]", el).onclick = () => ctx.go("verlauf");
-      bind2(el, () => dashboard3(el, ctx));
+      bind(el, () => dashboard3(el, ctx));
     }
     function line2(m) {
       const w = m.winners || [];
@@ -1472,7 +1472,7 @@
         id: e?.id,
         created: e?.created,
         date: e?.date || today(),
-        variant: e?.variant || (def.variants ? view3.variant !== "all" ? view3.variant : def.variants[0][0] : null),
+        variant: e?.variant || (def.variants ? view2.variant !== "all" ? view2.variant : def.variants[0][0] : null),
         sel: new Set(e?.players || []),
         mode: e?.mode || "teams",
         team: {},
@@ -1602,8 +1602,8 @@
     function statistik3(el, ctx) {
       const ms = list2(), st = stats2(ms);
       if (!ms.length) {
-        el.innerHTML = `${filterBar3()}<div class="empty-state panel"><p>Noch keine Partien in dieser Auswahl.</p></div>`;
-        bind2(el, () => statistik3(el, ctx));
+        el.innerHTML = `${filterBar2()}<div class="empty-state panel"><p>Noch keine Partien in dieser Auswahl.</p></div>`;
+        bind(el, () => statistik3(el, ctx));
         return;
       }
       const cols = [
@@ -1642,13 +1642,13 @@
         return `<td>${o ? `${fmtPct(o.w / o.g)}<small> (${o.g})</small>` : "\u2013"}</td>`;
       }).join("")}</tr>`).join("")}</tbody></table></div>
       ${def.teams ? `<h3 class="sub-h">Bester Partner</h3><ul class="kings">${st.filter((s) => s.bestPartner).map((s) => `<li><span class="who">${g2.avatar(s, "mini")}${esc(s.name)}</span><span class="k-cat">mit</span><span class="who">${g2.avatar(s.bestPartner, "mini")}${esc(s.bestPartner.name)}</span><b>${s.bestPartner.wins}/${s.bestPartner.games}</b></li>`).join("") || '<li class="muted">Noch keine Teamspiele.</li>'}</ul>` : ""}
-      ${def.variants && view3.variant === "all" ? `<h3 class="sub-h">Siege je Variante</h3>${variantTable(ms, st)}` : ""}
+      ${def.variants && view2.variant === "all" ? `<h3 class="sub-h">Siege je Variante</h3>${variantTable(ms, st)}` : ""}
       <h3 class="sub-h">Kopf an Kopf</h3><div id="h2h"></div>`;
-      el.innerHTML = `${filterBar3()}
+      el.innerHTML = `${filterBar2()}
       <section class="panel"><h2 class="panel-title">Rangliste</h2>${leaderboard(g2, st, cols)}</section>
       <section class="panel"><h2 class="panel-title">Siegquote</h2>${barChart([...st].sort((a, b) => b.rate - a.rate).map((s) => ({ label: s.name, value: s.rate * 100, icon: g2.avatar(s, "mini"), color: def.colorOf(s.id), note: `${s.wins} von ${s.games}` })), { unit: " %", digits: 0, max: 100 })}</section>
       <section class="panel">${details("Mehr Statistiken", more)}</section>`;
-      bind2(el, () => statistik3(el, ctx));
+      bind(el, () => statistik3(el, ctx));
       h2hBlock($("#h2h", el), g2, ms);
     }
     function variantTable(ms, st) {
@@ -1784,18 +1784,18 @@
   // js/games/scores.js
   function makeScoreGame(def) {
     const g2 = { ...def };
-    const view3 = { variant: "all" };
+    const view2 = { variant: "all" };
     const vName = (k) => (def.variants || []).find(([v]) => v === k)?.[1] || "";
     const awardsOf = (v) => def.awards?.[v] || [];
-    const filterBar3 = () => def.variants ? `<div class="filters">${seg("variant", [["all", "Alle"], ...def.variants], view3.variant)}</div>` : "";
-    const bind2 = (el, redraw) => $$('[data-seg="variant"]', el).forEach((s) => s.addEventListener("click", (e) => {
+    const filterBar2 = () => def.variants ? `<div class="filters">${seg("variant", [["all", "Alle"], ...def.variants], view2.variant)}</div>` : "";
+    const bind = (el, redraw) => $$('[data-seg="variant"]', el).forEach((s) => s.addEventListener("click", (e) => {
       const b = e.target.closest("button");
       if (b) {
-        view3.variant = b.dataset.v;
+        view2.variant = b.dataset.v;
         redraw();
       }
     }));
-    const list2 = () => matchesOf(def.id, (m) => view3.variant === "all" || m.variant === view3.variant);
+    const list2 = () => matchesOf(def.id, (m) => view2.variant === "all" || m.variant === view2.variant);
     const unit = def.unit || "Punkte";
     const theme = (v) => {
       if (def.variantTheme) {
@@ -1815,12 +1815,12 @@
       return st;
     }
     function dashboard3(el, ctx) {
-      theme(view3.variant);
+      theme(view2.variant);
       const ms = list2(), st = stats2(ms);
       if (!ms.length) {
-        el.innerHTML = `${filterBar3()}<div class="empty-state panel"><p>Noch keine Partie${view3.variant !== "all" ? ` in ${esc(vName(view3.variant))}` : ""}.</p><button class="btn btn-primary" type="button" data-new>Partie eintragen</button></div>`;
+        el.innerHTML = `${filterBar2()}<div class="empty-state panel"><p>Noch keine Partie${view2.variant !== "all" ? ` in ${esc(vName(view2.variant))}` : ""}.</p><button class="btn btn-primary" type="button" data-new>Partie eintragen</button></div>`;
         $("[data-new]", el).onclick = () => ctx.go("neu");
-        bind2(el, () => dashboard3(el, ctx));
+        bind(el, () => dashboard3(el, ctx));
         return;
       }
       const T = (title, key, fmt, opts = {}) => {
@@ -1836,11 +1836,11 @@
         T("L\xE4ngste Siegesserie", "streak", (v) => plural(v, "Sieg", "Siege"), { filter: (s) => s.streak > 0 })
       ];
       const recent = [...ms].reverse().slice(0, 3);
-      el.innerHTML = `${filterBar3()}<div class="stats-grid">${tiles.join("")}</div>
+      el.innerHTML = `${filterBar2()}<div class="stats-grid">${tiles.join("")}</div>
       <section class="panel"><h2 class="panel-title">Zuletzt gespielt</h2>${recent.map((m) => `<div class="mini-hist"><span class="hist-date">${fmtDate(m.date)}${m.variant ? ` \xB7 ${esc(vName(m.variant))}` : ""}</span>${rankedLine(g2, m)}</div>`).join("")}
       <button class="btn btn-ghost wide" type="button" data-all>Alle Partien</button></section>`;
       $("[data-all]", el).onclick = () => ctx.go("verlauf");
-      bind2(el, () => dashboard3(el, ctx));
+      bind(el, () => dashboard3(el, ctx));
     }
     let editing3 = null;
     function neu2(el, ctx) {
@@ -1850,7 +1850,7 @@
         id: e?.id,
         created: e?.created,
         date: e?.date || today(),
-        variant: e?.variant || (def.variants ? view3.variant !== "all" ? view3.variant : def.variants[0][0] : null),
+        variant: e?.variant || (def.variants ? view2.variant !== "all" ? view2.variant : def.variants[0][0] : null),
         sel: new Set(e?.players || []),
         pts: { ...e?.totals || {} },
         awards: { ...e?.awards || {} },
@@ -1959,7 +1959,7 @@
         try {
           await saveMatch(m);
           toast(`<b>Gespeichert.</b> ${esc(winners.map((p) => playerName(p)).join(" & "))} ${winners.length > 1 ? "gewinnen" : "gewinnt"} mit ${fmtNum(totals[winners[0]], 0)} ${esc(unit)}.`, { icon: def.winIcon?.() || "" });
-          view3.variant = def.variants ? S.variant : "all";
+          view2.variant = def.variants ? S.variant : "all";
           ctx.go("dashboard");
         } catch (err) {
           toast(esc(err.message));
@@ -1967,11 +1967,11 @@
       };
     }
     function statistik3(el, ctx) {
-      theme(view3.variant);
+      theme(view2.variant);
       const ms = list2(), st = stats2(ms);
       if (!ms.length) {
-        el.innerHTML = `${filterBar3()}<div class="empty-state panel"><p>Noch keine Partien in dieser Auswahl.</p></div>`;
-        bind2(el, () => statistik3(el, ctx));
+        el.innerHTML = `${filterBar2()}<div class="empty-state panel"><p>Noch keine Partien in dieser Auswahl.</p></div>`;
+        bind(el, () => statistik3(el, ctx));
         return;
       }
       const cols = [{ key: "games", label: "Partien" }, { key: "wins", label: "Siege" }, { key: "rate", label: "Quote", fmt: fmtPct }, { key: "avg", label: "\xD8", fmt: (v) => fmtNum(v) }, { key: "best", label: "Rekord" }];
@@ -1987,13 +1987,13 @@
       <h3 class="sub-h">\xD8 ${esc(unit)} nach Spielerzahl</h3>${barChart(Object.entries(groups).sort().map(([n, v]) => ({ label: `${n} Spieler`, value: v.reduce((a, b) => a + b, 0) / v.length })))}
       <h3 class="sub-h">L\xE4ngste Siegesserie</h3>${barChart([...st].filter((s) => s.streak).sort((a, b) => b.streak - a.streak).map((s) => ({ label: s.name, value: s.streak, icon: g2.avatar(s, "mini"), color: def.colorOf(s.id), note: s.current ? `aktuell ${s.current}` : "" })), { digits: 0 })}
       ${allAwards.map((a) => `<h3 class="sub-h">${esc(a)}</h3>${barChart(st.filter((s) => s.awards[a]).sort((x, y) => y.awards[a] - x.awards[a]).map((s) => ({ label: s.name, value: s.awards[a], icon: g2.avatar(s, "mini"), color: def.colorOf(s.id) })), { digits: 0 })}`).join("")}
-      ${def.variants && view3.variant === "all" ? `<h3 class="sub-h">Siege je Variante</h3>${variantTable(ms, st)}` : ""}
+      ${def.variants && view2.variant === "all" ? `<h3 class="sub-h">Siege je Variante</h3>${variantTable(ms, st)}` : ""}
       <h3 class="sub-h">Kopf an Kopf</h3><div id="h2h"></div>`;
-      el.innerHTML = `${filterBar3()}
+      el.innerHTML = `${filterBar2()}
       <section class="panel"><h2 class="panel-title">Rangliste</h2>${leaderboard(g2, st, cols)}</section>
       <section class="panel"><h2 class="panel-title">\xD8 ${esc(unit)}</h2>${barChart([...st].sort((a, b) => b.avg - a.avg).map((s) => ({ label: s.name, value: s.avg, icon: g2.avatar(s, "mini"), color: def.colorOf(s.id), note: `Rekord ${s.best}` })))}</section>
       <section class="panel">${details("Mehr Statistiken", more)}</section>`;
-      bind2(el, () => statistik3(el, ctx));
+      bind(el, () => statistik3(el, ctx));
       h2hBlock($("#h2h", el), g2, ms);
     }
     function variantTable(ms, st) {
@@ -2004,7 +2004,7 @@
       }).join("")}</tr>`).join("")}</tbody></table></div>`;
     }
     function verlauf3(el, ctx) {
-      theme(view3.variant);
+      theme(view2.variant);
       historyList(el, ctx, { matches: matchesOf(def.id), line: (m) => rankedLine(g2, m) + (m.awards ? `<p class="others">${Object.entries(m.awards).map(([a, p]) => `${esc(a)}: <b>${esc(playerName(p, m))}</b>`).join(" \xB7 ")}</p>` : ""), onEdit: (m) => {
         editing3 = m;
         ctx.go("neu");
@@ -2092,14 +2092,13 @@
   });
 
   // js/games/schiffe.js
-  var FLEETS = {
-    klassisch: { name: "Klassisch", note: "5 Schiffe \xB7 17 Felder", ships: [
-      { k: "traeger", n: "Flugzeugtr\xE4ger", len: 5, count: 1 },
-      { k: "schlacht", n: "Schlachtschiff", len: 4, count: 1 },
-      { k: "zerstoerer3", n: "Zerst\xF6rer", len: 3, count: 2 },
-      { k: "patrouille", n: "Patrouillenboot", len: 2, count: 1 }
-    ] }
-  };
+  var SHIPS = [
+    { k: "traeger", n: "Flugzeugtr\xE4ger", len: 5 },
+    { k: "schlacht", n: "Schlachtschiff", len: 4 },
+    { k: "zerstoerer3", n: "Zerst\xF6rer", len: 3 },
+    { k: "patrouille", n: "Patrouillenboot", len: 2 }
+  ];
+  var DEFAULT = { w: 10, h: 10, fleet: { traeger: 1, schlacht: 1, zerstoerer3: 2, patrouille: 1 } };
   var OLD = { kreuzer: "zerstoerer3", uboot: "zerstoerer3", zerstoerer: "patrouille" };
   var normSunk = (o = {}) => {
     const r = {};
@@ -2109,11 +2108,29 @@
     }
     return r;
   };
-  var VARIANTS = Object.entries(FLEETS).map(([k, f]) => [k, f.name]);
-  var fleetOf = () => FLEETS.klassisch;
-  var ONE = VARIANTS.length < 2;
-  var fleetSize = (v) => fleetOf(v).ships.reduce((a, s) => a + s.count, 0);
-  var shipLen = (v, k) => fleetOf(v).ships.find((s) => s.k === k)?.len || 0;
+  var fleetOf = (m) => m?.fleet || DEFAULT.fleet;
+  var boardOf = (m) => m?.board || { w: DEFAULT.w, h: DEFAULT.h };
+  var fleetCount = (f) => SHIPS.reduce((a, s) => a + (+f[s.k] || 0), 0);
+  var fleetCells = (f) => SHIPS.reduce((a, s) => a + (+f[s.k] || 0) * s.len, 0);
+  var shipLen = (k) => SHIPS.find((s) => s.k === k)?.len || 0;
+  var shipName = (k) => SHIPS.find((s) => s.k === k)?.n || k;
+  var boardTxt = (b) => `${b.w}\xD7${b.h}`;
+  var fleetTxt = (f) => SHIPS.filter((s) => f[s.k]).map((s) => `${f[s.k] > 1 ? `${f[s.k]}\xD7 ` : ""}${s.n}`).join(" \xB7 ");
+  var SETUP_KEY = "kg.schiffe.setup";
+  var lastSetup = () => {
+    try {
+      const v = JSON.parse(localStorage.getItem(SETUP_KEY));
+      if (v?.fleet && v.w) return v;
+    } catch {
+    }
+    return JSON.parse(JSON.stringify(DEFAULT));
+  };
+  var saveSetup = (v) => {
+    try {
+      localStorage.setItem(SETUP_KEY, JSON.stringify(v));
+    } catch {
+    }
+  };
   function shipSvg(k, len, { sunk = false, cls = "" } = {}) {
     const W = len * 20, H = 16, hull = sunk ? "#5E6B78" : "#A9B6C2", deck = sunk ? "#4A5562" : "#7E8C99", line2 = "#2B3947";
     let body;
@@ -2145,23 +2162,26 @@
   var flag = (x) => `<svg class="sflag" viewBox="0 0 34 24" aria-hidden="true"><g transform="translate(2 2)">${x.d}<rect width="30" height="20" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1" rx="1.5"/></g></svg>`;
   var sunkOf = (m, pid) => normSunk(m.sunk?.[pid]);
   var countSunk = (m, pid) => Object.values(sunkOf(m, pid)).reduce((a, b) => a + (+b || 0), 0);
-  var hitsOf = (m, pid) => Object.entries(sunkOf(m, pid)).reduce((a, [k, c]) => a + shipLen(m.variant, k) * c, 0);
+  var hitsOf = (m, pid) => Object.entries(sunkOf(m, pid)).reduce((a, [k, c]) => a + shipLen(k) * c, 0);
   var lostOf = (m, pid) => m.players.length === 2 ? countSunk(m, m.players.find((p) => p !== pid)) : null;
   function stats(ms) {
     const st = perPlayer(ms, { total: (m, pid) => countSunk(m, pid) });
     for (const s of st) {
       let sunk = 0, lost = 0, duels = 0, perfect = 0, close = 0, shots = 0, shotHits = 0, startG = 0, startW = 0, surv = [], winShots = [];
-      const byType = {};
+      const byType = {}, availType = {};
+      let fewest = null;
       for (const { m, won } of s.results) {
+        const f = fleetOf(m), opp = m.players.length - 1;
         const c = countSunk(m, s.id);
         sunk += c;
         for (const [k, n] of Object.entries(sunkOf(m, s.id))) byType[k] = (byType[k] || 0) + n;
+        for (const sh2 of SHIPS) availType[sh2.k] = (availType[sh2.k] || 0) + (+f[sh2.k] || 0) * opp;
         const l = lostOf(m, s.id);
         if (l != null) {
           duels++;
           lost += l;
           if (won) {
-            const left = fleetSize(m.variant) - l;
+            const left = fleetCount(f) - l;
             surv.push(left);
             if (l === 0) perfect++;
             if (left === 1) close++;
@@ -2171,15 +2191,17 @@
         if (sh > 0) {
           shots += sh;
           shotHits += hitsOf(m, s.id);
-          if (won) winShots.push(sh);
+          if (won) {
+            winShots.push(sh);
+            if (fewest == null || sh < fewest.n) fewest = { n: sh, board: boardTxt(boardOf(m)) };
+          }
         }
         if (m.starter === s.id) {
           startG++;
           if (won) startW++;
         }
       }
-      const cnt = (k) => fleetOf().ships.find((x) => x.k === k)?.count || 1;
-      const fav = Object.entries(byType).sort((a, b) => b[1] / cnt(b[0]) - a[1] / cnt(a[0]))[0];
+      const fav = Object.entries(byType).filter(([k]) => availType[k]).sort((a, b) => b[1] / availType[b[0]] - a[1] / availType[a[0]])[0];
       Object.assign(s, {
         sunk,
         lost: duels ? lost : null,
@@ -2190,7 +2212,8 @@
         survAvg: surv.length ? surv.reduce((a, b) => a + b, 0) / surv.length : null,
         accuracy: shots ? shotHits / shots : null,
         shots,
-        fewestShots: winShots.length ? Math.min(...winShots) : null,
+        fewestShots: fewest?.n ?? null,
+        fewestBoard: fewest?.board,
         startRate: startG ? startW / startG : null,
         startG,
         fav: fav ? fav[0] : null,
@@ -2200,14 +2223,38 @@
     }
     return st;
   }
-  function shipSurvival(ms, v) {
-    const out = fleetOf(v).ships.map((sh) => ({ ...sh, avail: 0, sunk: 0 }));
-    for (const m of ms) if ((m.variant || "klassisch") === v) for (const pid of m.players) for (const o of out) o.sunk += +(sunkOf(m, pid)[o.k] || 0);
-    for (const o of out) {
-      o.avail = ms.filter((m) => (m.variant || "klassisch") === v).reduce((a, m) => a + o.count * m.players.length, 0);
-      o.rate = o.avail ? o.sunk / o.avail : null;
+  function shipSurvival(ms) {
+    const out = SHIPS.map((sh) => ({ ...sh, avail: 0, sunk: 0 }));
+    for (const m of ms) {
+      const f = fleetOf(m);
+      for (const o of out) {
+        o.avail += (+f[o.k] || 0) * m.players.length;
+        for (const pid of m.players) o.sunk += +(sunkOf(m, pid)[o.k] || 0);
+      }
     }
-    return out;
+    for (const o of out) o.rate = o.avail ? Math.min(1, o.sunk / o.avail) : null;
+    return out.filter((o) => o.avail);
+  }
+  function boardTable(ms) {
+    const map = /* @__PURE__ */ new Map();
+    for (const m of ms) {
+      const key = boardTxt(boardOf(m)), r = map.get(key) || { key, cells: boardOf(m).w * boardOf(m).h, games: 0, winShots: [], shots: 0, hits: 0, fleetCells: 0 };
+      r.games++;
+      r.fleetCells += fleetCells(fleetOf(m));
+      for (const p of m.players) {
+        const sh = +m.shots?.[p];
+        if (sh > 0) {
+          r.shots += sh;
+          r.hits += hitsOf(m, p);
+          if (m.winners?.includes(p)) r.winShots.push(sh);
+        }
+      }
+      map.set(key, r);
+    }
+    const rows = [...map.values()].sort((a, b) => a.cells - b.cells);
+    return `<div class="table-wrap"><table class="lb"><thead><tr><th class="l">Spielfeld</th><th>Partien</th><th>\xD8 Schiffsfelder</th><th>\xD8 Sch\xFCsse bis Sieg</th><th>Trefferquote</th></tr></thead><tbody>
+    ${rows.map((r) => `<tr><td class="l">${r.key}</td><td>${r.games}</td><td>${fmtNum(r.fleetCells / r.games)} <small>(${fmtPct(r.fleetCells / r.games / r.cells)})</small></td><td>${r.winShots.length ? fmtNum(r.winShots.reduce((a, b) => a + b, 0) / r.winShots.length, 0) : "\u2013"}</td><td>${r.shots ? fmtPct(r.hits / r.shots) : "\u2013"}</td></tr>`).join("")}</tbody></table></div>
+    <p class="hint">\xD8 Schiffsfelder: wie viele Felder von Schiffen belegt waren (Anteil am Spielfeld). Je voller das Feld, desto schneller wird getroffen.</p>`;
   }
   var g = {
     id: "schiffe",
@@ -2222,28 +2269,17 @@
     logo: () => `<div class="lg-schiffe"><div class="sv-grid"></div>${shipSvg("schlacht", 4, { cls: "s1" })}${shipSvg("patrouille", 2, { sunk: true, cls: "s2" })}<i class="peg w p1"></i><i class="peg w p2"></i><i class="peg r p3"></i><span class="nm">Schiffe versenken</span></div>`,
     header: () => `<div class="sv-radar" aria-hidden="true"><i class="sweep"></i><i class="blip b1"></i><i class="blip b2"></i><i class="blip b3"></i></div><h1 class="g-title">Schiffe<br>versenken</h1><p class="g-sub">Treffer. Versenkt.</p>`
   };
-  var view2 = { variant: "all" };
-  var filterBar2 = () => ONE ? "" : `<div class="filters">${seg("variant", [["all", "Alle"], ...VARIANTS], view2.variant)}</div>`;
-  var bind = (el, redraw) => $$('[data-seg="variant"]', el).forEach((s) => s.addEventListener("click", (e) => {
-    const b = e.target.closest("button");
-    if (b) {
-      view2.variant = b.dataset.v;
-      redraw();
-    }
-  }));
-  var list = () => matchesOf("schiffe", (m) => ONE || view2.variant === "all" || (m.variant || "klassisch") === view2.variant);
-  var shipName = (k) => Object.values(FLEETS).flatMap((f) => f.ships).find((s) => s.k === k)?.n || k;
+  var list = () => matchesOf("schiffe");
   function dashboard2(el, ctx) {
     const ms = list(), st = stats(ms);
     if (!ms.length) {
-      el.innerHTML = `${filterBar2()}<div class="empty-state panel"><p>Noch keine Seeschlacht eingetragen.</p><button class="btn btn-primary" type="button" data-new>Partie eintragen</button></div>`;
+      el.innerHTML = `<div class="empty-state panel"><p>Noch keine Seeschlacht eingetragen.</p><button class="btn btn-primary" type="button" data-new>Partie eintragen</button></div>`;
       $("[data-new]", el).onclick = () => ctx.go("neu");
-      bind(el, () => dashboard2(el, ctx));
       return;
     }
     const T = (title, key, fmt, opts = {}) => {
       const r = top(st, key, opts);
-      return statTile(title, r ? fmt(r.value) : "\u2013", r ? whoList(g, r.who) : '<span class="muted">noch niemand</span>', opts.note || "");
+      return statTile(title, r ? fmt(r.value) : "\u2013", r ? whoList(g, r.who) : '<span class="muted">noch niemand</span>', typeof opts.note === "function" ? r ? opts.note(r) : "" : opts.note || "");
     };
     const tiles = [
       T("Meiste Siege", "wins", (v) => v),
@@ -2251,25 +2287,24 @@
       T("Meiste Schiffe versenkt", "sunk", (v) => v),
       T("Beste Flottenbilanz", "balance", (v) => v > 0 ? `+${v}` : v, { note: "versenkt minus verloren" }),
       T("Treffsicherste Hand", "accuracy", fmtPct, { filter: (s) => s.shots >= 30, note: "Treffer pro Schuss" }),
-      T("Schnellster Sieg", "fewestShots", (v) => `${v} Sch\xFCsse`, { low: true }),
+      T("Schnellster Sieg", "fewestShots", (v) => `${v} Sch\xFCsse`, { low: true, note: (r) => r.who.length === 1 ? `auf ${r.who[0].fewestBoard} Feldern` : "" }),
       T("Perfekte Siege", "perfect", (v) => `${v}\xD7`, { filter: (s) => s.perfect > 0, note: "ohne ein eigenes Schiff zu verlieren" }),
       T("L\xE4ngste Siegesserie", "streak", (v) => plural(v, "Sieg", "Siege"), { filter: (s) => s.streak > 0 })
     ];
     const starts = ms.filter((m) => m.starter && m.winners?.length);
     const startRate = starts.length ? starts.filter((m) => m.winners.includes(m.starter)).length / starts.length : null;
     const recent = [...ms].reverse().slice(0, 3);
-    el.innerHTML = `${filterBar2()}<div class="stats-grid">${tiles.join("")}</div>
+    el.innerHTML = `<div class="stats-grid">${tiles.join("")}</div>
     ${startRate != null ? `<section class="panel first"><h2 class="panel-title">Lohnt sich der erste Schuss?</h2><p class="big-q"><b>${fmtPct(startRate)}</b> der Partien gewinnt, wer anf\xE4ngt <span class="muted">(${plural(starts.length, "Partie", "Partien")})</span></p></section>` : ""}
     <section class="panel"><h2 class="panel-title">Zuletzt</h2>${recent.map(line).join("")}<button class="btn btn-ghost wide" type="button" data-all>Alle Partien</button></section>`;
     $("[data-all]", el).onclick = () => ctx.go("verlauf");
-    bind(el, () => dashboard2(el, ctx));
   }
   function line(m) {
-    const v = m.variant || "klassisch", total = fleetSize(v) * (m.players.length - 1);
-    return `<div class="mini-hist sv-line"><span class="hist-date">${fmtDate(m.date)} \xB7 ${esc(fleetOf(v).name)}</span>
+    const f = fleetOf(m), opp = m.players.length - 1, total = fleetCount(f) * opp;
+    return `<div class="mini-hist sv-line"><span class="hist-date">${fmtDate(m.date)} \xB7 ${boardTxt(boardOf(m))} \xB7 ${plural(fleetCount(f), "Schiff", "Schiffe")}</span>
     ${[...m.players].sort((a, b) => countSunk(m, b) - countSunk(m, a)).map((p) => `<div class="sv-row ${m.winners?.includes(p) ? "win" : ""}">
       <span class="who">${g.avatar({ id: p, name: playerName(p, m) }, "mini")}${esc(playerName(p, m))}</span>
-      <span class="sv-mini">${fleetOf(v).ships.flatMap((sh) => Array.from({ length: sh.count * (m.players.length - 1) }, (_, i) => `<i class="${i < (sunkOf(m, p)[sh.k] || 0) ? "hit" : ""}" style="--l:${sh.len}" title="${esc(sh.n)}"></i>`)).join("")}</span>
+      <span class="sv-mini">${SHIPS.flatMap((sh) => Array.from({ length: (+f[sh.k] || 0) * opp }, (_, i) => `<i class="${i < (sunkOf(m, p)[sh.k] || 0) ? "hit" : ""}" style="--l:${sh.len}" title="${esc(sh.n)}"></i>`)).join("")}</span>
       <b>${countSunk(m, p)}/${total}</b></div>`).join("")}
   </div>`;
   }
@@ -2277,11 +2312,14 @@
   function neu(el, ctx) {
     const e = editing2;
     editing2 = null;
+    const base = e ? { ...boardOf(e), fleet: { ...fleetOf(e) } } : lastSetup();
     const S = {
       id: e?.id,
       created: e?.created,
       date: e?.date || today(),
-      variant: e?.variant || (view2.variant !== "all" ? view2.variant : "klassisch"),
+      w: base.w,
+      h: base.h,
+      fleet: { ...DEFAULT.fleet, ...base.fleet },
       sel: new Set(e?.players || []),
       sunk: Object.fromEntries(Object.entries(e?.sunk || {}).map(([p, o]) => [p, normSunk(o)])),
       shots: { ...e?.shots || {} },
@@ -2289,37 +2327,74 @@
       winner: e ? e.winners?.length ? e.winners[0] : "none" : null,
       winnerTouched: !!e
     };
+    if (!e) SHIPS.forEach((sh) => {
+      S.fleet[sh.k] = +base.fleet[sh.k] || 0;
+    });
     el.innerHTML = `<section class="panel"><div class="setup-grid">
       <label class="field"><span>Gespielt am</span><input type="date" id="vDate" value="${S.date}"></label>
-      <div><span class="field-label">Flotte</span>${ONE ? `<p class="fleet-line">${fleetOf().ships.map((sh) => `${sh.count > 1 ? `${sh.count}\xD7 ` : ""}${esc(sh.n)}`).join(" \xB7 ")}</p>` : seg("fleet", VARIANTS, S.variant)}<p class="hint" id="fleetNote"></p></div>
-    </div></section>
+      <div><span class="field-label">Spielfeld</span>
+        <div class="sv-size"><input type="number" inputmode="numeric" min="4" max="30" id="vW" value="${S.w}" aria-label="Breite"><span>\xD7</span><input type="number" inputmode="numeric" min="4" max="30" id="vH" value="${S.h}" aria-label="H\xF6he"></div>
+        <div class="chips sv-presets">${[[8, 8], [10, 10], [12, 12]].map(([w, h]) => `<button type="button" class="chip" data-size="${w}x${h}">${w}\xD7${h}</button>`).join("")}</div>
+      </div>
+    </div>
+    <span class="field-label sv-fl">Flotte \u2013 wie viele Schiffe hatte jeder?</span>
+    <div class="sv-fleet">${SHIPS.map((sh) => `<div class="sv-ft" data-k="${sh.k}">${shipSvg(sh.k, sh.len)}<span class="sv-ft-n">${esc(sh.n)}<small>${sh.len} Felder</small></span>
+      <span class="step"><button type="button" data-fd="-1" aria-label="${esc(sh.n)} weniger">\u2212</button><b data-fc>${S.fleet[sh.k]}</b><button type="button" data-fd="1" aria-label="${esc(sh.n)} mehr">+</button></span></div>`).join("")}</div>
+    <p class="hint" id="fleetNote"></p>
+    </section>
     <section class="panel" id="vPick"></section>
     <div id="vBoards"></div>
     <section class="panel" id="vWin"></section>
     <div class="save-wrap"><button class="btn btn-primary big" type="button" id="vSave">${S.id ? "\xC4nderungen speichern" : "Seeschlacht speichern"}</button></div>`;
     playerPicker($("#vPick", el), { game: g, selected: S.sel, min: 2, max: 4, onChange: () => draw() });
-    $('[data-seg="fleet"]', el)?.addEventListener("click", (ev) => {
-      const b = ev.target.closest("button");
-      if (!b) return;
-      S.variant = b.dataset.v;
-      S.sunk = {};
-      $$('[data-seg="fleet"] button', el).forEach((x) => x.setAttribute("aria-pressed", x === b));
-      draw();
-    });
     const ids = () => {
       const ps = playersByCreated().map((p) => p.id);
       return [...S.sel].sort((a, b) => ps.indexOf(a) - ps.indexOf(b));
     };
     const nm = (p) => playerName(p, e);
-    const maxOf = (sh) => sh.count * Math.max(1, ids().length - 1);
-    const total = () => fleetSize(S.variant) * Math.max(1, ids().length - 1);
+    const opp = () => Math.max(1, ids().length - 1);
+    const maxOf = (k) => (+S.fleet[k] || 0) * opp();
+    const total = () => fleetCount(S.fleet) * opp();
+    function note() {
+      const cells = fleetCells(S.fleet), area = S.w * S.h;
+      $("#fleetNote", el).innerHTML = `${plural(fleetCount(S.fleet), "Schiff", "Schiffe")} \xB7 ${cells} von ${area} Feldern belegt (${fmtPct(cells / area)})${cells > area ? " \u2013 <b>passt so nicht aufs Spielfeld</b>" : ""}`;
+      $$(".sv-presets .chip", el).forEach((c) => c.setAttribute("aria-pressed", c.dataset.size === `${S.w}x${S.h}`));
+    }
+    function clampSunk() {
+      for (const p of Object.keys(S.sunk)) for (const k of Object.keys(S.sunk[p])) S.sunk[p][k] = Math.min(S.sunk[p][k], maxOf(k));
+    }
+    const setSize = () => {
+      S.w = Math.max(4, Math.min(30, parseInt($("#vW", el).value, 10) || 10));
+      S.h = Math.max(4, Math.min(30, parseInt($("#vH", el).value, 10) || 10));
+      note();
+    };
+    $("#vW", el).addEventListener("input", setSize);
+    $("#vH", el).addEventListener("input", setSize);
+    $$(".sv-presets .chip", el).forEach((c) => c.addEventListener("click", () => {
+      const [w, h] = c.dataset.size.split("x");
+      $("#vW", el).value = w;
+      $("#vH", el).value = h;
+      setSize();
+    }));
+    $$(".sv-ft", el).forEach((row) => row.addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-fd]");
+      if (!b) return;
+      const k = row.dataset.k;
+      S.fleet[k] = Math.max(0, Math.min(9, (+S.fleet[k] || 0) + +b.dataset.fd));
+      $("[data-fc]", row).textContent = S.fleet[k];
+      row.classList.toggle("off", !S.fleet[k]);
+      clampSunk();
+      note();
+      draw();
+    }));
+    $$(".sv-ft", el).forEach((row) => row.classList.toggle("off", !S.fleet[row.dataset.k]));
     function autoWinner() {
       if (S.winnerTouched) return;
-      const done = ids().filter((p) => fleetOf(S.variant).ships.every((sh) => (S.sunk[p]?.[sh.k] || 0) >= maxOf(sh)));
+      const done = fleetCount(S.fleet) ? ids().filter((p) => SHIPS.every((sh) => (S.sunk[p]?.[sh.k] || 0) >= maxOf(sh.k))) : [];
       S.winner = done.length === 1 ? done[0] : null;
     }
     function draw() {
-      $("#fleetNote", el).textContent = fleetOf(S.variant).note;
+      note();
       const P = ids(), box = $("#vBoards", el);
       if (P.length < 2) {
         box.innerHTML = "";
@@ -2327,11 +2402,11 @@
         return;
       }
       box.innerHTML = P.map((p) => {
-        const opp = P.filter((x) => x !== p);
+        const o = P.filter((x) => x !== p);
         return `<section class="panel sv-board" data-p="${p}">
         <div class="sv-head"><span class="who">${g.avatar({ id: p, name: nm(p) }, "dot")}<b>${esc(nm(p))}</b></span><span class="sv-count"><b data-cnt>0</b> / ${total()} versenkt</span></div>
-        <p class="hint">Welche Schiffe ${P.length === 2 ? `von <b>${esc(nm(opp[0]))}</b>` : "der Gegner"} hat ${esc(nm(p))} versenkt? Antippen zum Versenken.</p>
-        <div class="sv-ships">${fleetOf(S.variant).ships.flatMap((sh) => Array.from({ length: maxOf(sh) }, (_, i) => `<button type="button" class="sv-ship" data-k="${sh.k}" data-i="${i}" aria-pressed="false" aria-label="${esc(sh.n)} ${i + 1}">${shipSvg(sh.k, sh.len)}${shipSvg(sh.k, sh.len, { sunk: true })}<small>${esc(sh.n)}</small></button>`)).join("")}</div>
+        <p class="hint">Welche Schiffe ${P.length === 2 ? `von <b>${esc(nm(o[0]))}</b>` : "der Gegner"} hat ${esc(nm(p))} versenkt? Antippen zum Versenken.</p>
+        <div class="sv-ships">${SHIPS.flatMap((sh) => Array.from({ length: maxOf(sh.k) }, (_, i) => `<button type="button" class="sv-ship" data-k="${sh.k}" data-i="${i}" aria-pressed="false" aria-label="${esc(sh.n)} ${i + 1}">${shipSvg(sh.k, sh.len)}${shipSvg(sh.k, sh.len, { sunk: true })}<small>${esc(sh.n)}</small></button>`)).join("") || '<p class="empty">Oben zuerst die Flotte festlegen.</p>'}</div>
         <div class="sv-extra">
           <label class="sv-shots"><span>Sch\xFCsse <small>(optional)</small></span><input type="number" inputmode="numeric" min="0" data-shots="${p}" value="${S.shots[p] ?? ""}" placeholder="\u2013"></label>
           <label class="tick"><input type="radio" name="starter" value="${p}" ${S.starter === p ? "checked" : ""}><span>hat angefangen</span></label>
@@ -2378,8 +2453,11 @@
     draw();
     $("#vSave", el).onclick = async () => {
       const P = ids();
+      if (!fleetCount(S.fleet)) return toast("Lege zuerst fest, welche Schiffe es gab.");
       if (P.length < 2) return toast("W\xE4hle mindestens zwei Spieler.");
       if (!S.winner) return toast("W\xE4hle, wer gewonnen hat \u2013 oder \u201EAbgebrochen\u201C.");
+      clampSunk();
+      const fleet = Object.fromEntries(SHIPS.filter((sh) => S.fleet[sh.k]).map((sh) => [sh.k, S.fleet[sh.k]]));
       const sunk = Object.fromEntries(P.map((p) => [p, Object.fromEntries(Object.entries(S.sunk[p] || {}).filter(([, c]) => c > 0))]));
       const totals = Object.fromEntries(P.map((p) => [p, Object.values(sunk[p]).reduce((a, b) => a + b, 0)]));
       const winners = S.winner === "none" ? [] : [S.winner];
@@ -2396,7 +2474,8 @@
         created: S.created,
         game: "schiffe",
         date: $("#vDate", el).value || today(),
-        variant: S.variant,
+        board: { w: S.w, h: S.h },
+        fleet,
         players: P,
         sunk,
         totals,
@@ -2404,12 +2483,12 @@
         winners,
         ...Object.keys(shots).length ? { shots } : {},
         ...S.starter && P.includes(S.starter) ? { starter: S.starter } : {},
-        tags: [fleetOf(S.variant).name, ...winners.length ? [] : ["abgebrochen"]]
+        tags: [`${S.w}\xD7${S.h}`, plural(fleetCount(fleet), "Schiff", "Schiffe"), ...winners.length ? [] : ["abgebrochen"]]
       };
       try {
         await saveMatch(m);
+        saveSetup({ w: S.w, h: S.h, fleet: S.fleet });
         toast(winners.length ? `<b>Versenkt!</b> ${esc(nm(winners[0]))} gewinnt die Seeschlacht.` : "<b>Gespeichert.</b> Partie ohne Sieger.", { icon: g.winIcon() });
-        view2.variant = S.variant;
         ctx.go("dashboard");
       } catch (err) {
         toast(esc(err.message));
@@ -2419,8 +2498,7 @@
   function statistik2(el, ctx) {
     const ms = list(), st = stats(ms);
     if (!ms.length) {
-      el.innerHTML = `${filterBar2()}<div class="empty-state panel"><p>Noch keine Partien in dieser Auswahl.</p></div>`;
-      bind(el, () => statistik2(el, ctx));
+      el.innerHTML = '<div class="empty-state panel"><p>Noch keine Partien.</p></div>';
       return;
     }
     const cols = [
@@ -2431,34 +2509,30 @@
       { key: "balance", label: "Bilanz", fmt: (v) => v == null ? "\u2013" : v > 0 ? `+${v}` : v },
       { key: "accuracy", label: "Treffer", fmt: (v) => v == null ? "\u2013" : fmtPct(v) }
     ];
-    const fleets = view2.variant === "all" ? Object.keys(FLEETS).filter((v) => ms.some((m) => (m.variant || "klassisch") === v)) : [view2.variant];
-    const survival = fleets.map((v) => {
-      const rows = shipSurvival(ms, v).filter((o) => o.avail);
-      if (!rows.length) return "";
-      const best = [...rows].sort((a, b) => a.rate - b.rate)[0];
-      return `<div class="surv"><h3 class="sub-h">${ONE ? "" : `${esc(fleetOf(v).name)}: `}Wie oft geht welches Schiff unter?</h3>
-      <ul class="surv-list">${rows.map((o) => `<li>${shipSvg(o.k, o.len)}<span class="sn">${esc(o.n)}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.max(2, o.rate * 100)}%"></span></span><b>${fmtPct(o.rate)}</b></li>`).join("")}</ul>
-      <p class="hint">Am besten versteckt: <b>${esc(best.n)}</b> \u2013 \xFCberlebt in ${fmtPct(1 - best.rate)} der F\xE4lle.</p></div>`;
-    }).join("");
+    const rows = shipSurvival(ms);
+    const best = [...rows].sort((a, b) => a.rate - b.rate)[0];
+    const survival = rows.length ? `<h3 class="sub-h">Wie oft geht welches Schiff unter?</h3>
+    <ul class="surv-list">${rows.map((o) => `<li>${shipSvg(o.k, o.len)}<span class="sn">${esc(o.n)}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.max(2, o.rate * 100)}%"></span></span><b>${fmtPct(o.rate)}</b></li>`).join("")}</ul>
+    <p class="hint">Am besten versteckt: <b>${esc(best.n)}</b> \u2013 \xFCberlebt in ${fmtPct(1 - best.rate)} der F\xE4lle.</p>` : "";
     const startRows = st.filter((s) => s.startG).map((s) => ({ label: s.name, value: s.startRate * 100, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id), note: `${s.startG}\xD7 angefangen` }));
     const more = `
+    <h3 class="sub-h">Spielfelder</h3>${boardTable(ms)}
     <h3 class="sub-h">\xD8 versenkte Schiffe pro Partie</h3>${barChart([...st].sort((a, b) => b.avgSunk - a.avgSunk).map((s) => ({ label: s.name, value: s.avgSunk, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id) })))}
     <h3 class="sub-h">Treffsicherheit (Treffer pro Schuss)</h3>${st.some((s) => s.accuracy != null) ? barChart(st.filter((s) => s.accuracy != null).sort((a, b) => b.accuracy - a.accuracy).map((s) => ({ label: s.name, value: s.accuracy * 100, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id), note: `${s.shots} Sch\xFCsse` })), { unit: " %", digits: 0, max: 100 }) : '<p class="empty">Wird angezeigt, sobald Sch\xFCsse eingetragen werden.</p>'}
-    <h3 class="sub-h">Wenigste Sch\xFCsse bis zum Sieg</h3>${st.some((s) => s.fewestShots) ? barChart(st.filter((s) => s.fewestShots).sort((a, b) => a.fewestShots - b.fewestShots).map((s) => ({ label: s.name, value: s.fewestShots, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id) })), { digits: 0 }) : '<p class="empty">Noch keine Siege mit eingetragenen Sch\xFCssen.</p>'}
+    <h3 class="sub-h">Wenigste Sch\xFCsse bis zum Sieg</h3>${st.some((s) => s.fewestShots) ? barChart(st.filter((s) => s.fewestShots).sort((a, b) => a.fewestShots - b.fewestShots).map((s) => ({ label: s.name, value: s.fewestShots, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id), note: `auf ${s.fewestBoard}` })), { digits: 0 }) : '<p class="empty">Noch keine Siege mit eingetragenen Sch\xFCssen.</p>'}
     <h3 class="sub-h">\xDCberlebende Schiffe beim Sieg (\xD8)</h3>${barChart(st.filter((s) => s.survAvg != null).sort((a, b) => b.survAvg - a.survAvg).map((s) => ({ label: s.name, value: s.survAvg, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id), note: `${s.close}\xD7 knapp mit nur einem Schiff` })))}
     <h3 class="sub-h">Siegquote, wenn man anf\xE4ngt</h3>${startRows.length ? barChart(startRows.sort((a, b) => b.value - a.value), { unit: " %", digits: 0, max: 100 }) : '<p class="empty">Wird angezeigt, sobald \u201Ehat angefangen\u201C eingetragen wird.</p>'}
     <h3 class="sub-h">Lieblingsziel</h3><ul class="kings">${st.filter((s) => s.fav).map((s) => `<li><span class="who">${g.avatar(s.player, "mini")}${esc(s.name)}</span><span class="k-cat">versenkt am h\xE4ufigsten</span><b>${esc(shipName(s.fav))} (${s.favN}\xD7)</b></li>`).join("")}</ul>
     <h3 class="sub-h">L\xE4ngste Siegesserie</h3>${barChart([...st].filter((s) => s.streak).sort((a, b) => b.streak - a.streak).map((s) => ({ label: s.name, value: s.streak, icon: g.avatar(s.player, "mini"), color: g.colorOf(s.id), note: s.current ? `aktuell ${s.current}` : "" })), { digits: 0 })}
     <h3 class="sub-h">Kopf an Kopf</h3><div id="h2h"></div>`;
-    el.innerHTML = `${filterBar2()}
+    el.innerHTML = `
     <section class="panel"><h2 class="panel-title">Rangliste</h2>${leaderboard(g, st, cols)}<p class="hint">Bilanz = versenkte minus verlorene Schiffe (nur Duelle zu zweit). Treffer = Felder versenkter Schiffe pro Schuss.</p></section>
     <section class="panel"><h2 class="panel-title">Schiffe</h2>${survival}</section>
     <section class="panel">${details("Mehr Statistiken", more)}</section>`;
-    bind(el, () => statistik2(el, ctx));
     h2hBlock($("#h2h", el), g, ms);
   }
   function verlauf2(el, ctx) {
-    historyList(el, ctx, { matches: matchesOf("schiffe"), line: (m) => line(m) + (m.shots ? `<p class="others">Sch\xFCsse: ${Object.entries(m.shots).map(([p, n]) => `${esc(playerName(p, m))} ${n}`).join(" \xB7 ")}</p>` : ""), onEdit: (m) => {
+    historyList(el, ctx, { matches: list(), line: (m) => line(m) + `<p class="others">Flotte: ${esc(fleetTxt(fleetOf(m)))}</p>` + (m.shots ? `<p class="others">Sch\xFCsse: ${Object.entries(m.shots).map(([p, n]) => `${esc(playerName(p, m))} ${n}`).join(" \xB7 ")}</p>` : ""), onEdit: (m) => {
       editing2 = m;
       ctx.go("neu");
     } });
@@ -2472,6 +2546,7 @@
 
   // js/app.js
   var app;
+  var APP_VERSION = "1.6";
   var TABS = [["dashboard", "Dashboard"], ["neu", "Neues Spiel"], ["statistik", "Statistik"], ["verlauf", "Verlauf"]];
   var current = null;
   function parse() {
@@ -2551,7 +2626,7 @@
     app.innerHTML = `
   <header class="hub-top">
     <h1 class="wordmark small">Kahlo<span>Games</span></h1>
-    <a class="icon-btn" href="#/einstellungen" aria-label="Einstellungen">${gearIcon}</a>
+    <div class="hub-right"><span class="ver" title="Version der App">v${APP_VERSION}</span><a class="icon-btn" href="#/einstellungen" aria-label="Einstellungen">${gearIcon}</a></div>
   </header>
   <main class="hub-main">
     <h2 class="hub-q">Was habt ihr gespielt?</h2>
